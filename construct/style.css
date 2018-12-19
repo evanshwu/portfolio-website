@@ -1,0 +1,16 @@
+body{
+    background-color:#d2d2d2;
+    text-align: center;
+    padding: 70px;
+   }
+   p{
+    font-family: 'Dosis', sans-serif;
+   }
+   #canvas{
+    background-color:#000;
+    display:block;
+    margin:auto;
+   }
+   #logo{
+    display:none;
+   }
