@@ -80,7 +80,7 @@
       .tabs_inner .tab-content .tab-pane .list li .media .d-flex {
         padding-right: 100px; }
         .tabs_inner .tab-content .tab-pane .list li .media .d-flex p {
-          color: rgba(222, 0, 251, 0.75);/* time */
+          color: rgba(0, 0, 0, 0.75);/* time */
           margin-bottom: 0px;
           padding-top: 20px; }
       .tabs_inner .tab-content .tab-pane .list li .media .media-body h4 {
@@ -89,7 +89,7 @@
         text-transform: uppercase;
         margin-bottom: 20px; }
       .tabs_inner .tab-content .tab-pane .list li .media .media-body p {
-        color: rgba(255, 0, 0, 0.75);/* job description */
+        color: rgba(0, 0, 0, 0.75);/* job description */
         margin-bottom: 0px; }
   
   /* End My Tabs Area css
@@ -97,3 +97,13 @@
 
 
 
+/*hr-title*/
+
+.hr-title{
+  margin-bottom: 1.5rem!important;
+  margin-top: 1.5rem!important;
+  max-width: 50px;
+  border-width: 3px;
+  border-color: #f05f40;
+  
+}

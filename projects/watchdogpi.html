@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Evan Wu</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/grayscale.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="../index.html" style="color:#161616;">Hsin-Han Wu</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="../index.html#about" style="color:#161616;">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="../index.html#skills" style="color:#161616;">Skills</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="../index.html#projects" style="color:#161616;">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="https://drive.google.com/file/d/1_FY73Uvs27ethzwS3YCS-l1MPXDVfa4a/view?usp=sharing"
+                            style="color:#161616;">CV(External Link)</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects-section bg-light">
+        <div class="container">
+            <h3 class="text-center">My project - WatchdogPi</h3>
+            <hr class="hr-title">
+            <!-- Featured Project Row 1 -->
+            <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+                <div class="col-xl-8 col-lg-7">
+                    <div id="carousel-first" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="img-fluid mb-3 mb-lg-0" src="../img/doorbell.jpg" alt="First slide">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel-first" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-first" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-5">
+                    <div class="project-text text-center text-lg-left">
+                        <h4>WatchdogPi - A Smart Doorbell</h4>
+                        <p class="text-black-50 mb-0">A device for monitoring my house built with Raspberry Pi, and can
+                            even unlock the door for you.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>The background of this project</h2>
+            </div>
+            <div class="row">
+                <p>Each year, many people died for forgetting to bring their keys. most of these people lived in
+                    apartments, which they tried to climb up to their balcony and fell down to the ground. This project
+                    introduces an electronic doorbell that was connected to the apartment's access control system,
+                    opens the door by sending simple messages through messaging bots. In addition, this device was
+                    connected to a camera that captures an image of the person who was outside your door. This project
+                    is still under construction.</p>
+            </div>
+            <br>
+            <div class="row">
+                <h2>The programming languages I used</h2>
+            </div>
+            <br>
+            <div class="row">
+                <p>Python/Raspberry Pi, JavaScript, PHP</p>
+            </div>
+            <br>
+            <div class="row">
+                <h2>Theory</h2>
+            </div>
+            <div class="row">
+                <p>The hardware architecture of this project was based on Raspberry Pi Zero, which can easily replace
+                    existing doorbell devices due to its small size. The camera I used in this project is a Raspberry
+                    Pi camera module, it can also be replaced by an IR version that can take better images in darker
+                    environments. I have attached an IR transmitter that can open the door of my apartment. The access
+                    control system in my apartment supports opening the door downstairs using a controller. Once the
+                    Raspberry Pi receives a command, the Raspberry Pi will send a specific signal to open the door.
+                    However, this
+                    system was designed based on my condition, it does not apply to every apartments or homes.
+                    Additionally, the IR signal could be weak in higher floors/buildings, the interior design of the
+                    building could also effect the signal. In rare cases, the signal has to be send twice to open the
+                    door.
+                    <br>
+                    The controlling side I choose was LINE bot and Telegram bot that both runs a backend server to
+                    process data. Since these messaging applications are largely used by people daily, users do not
+                    have to install an additional application.</p>
+            </div>
+            <br>
+            <div class="row">
+                <h2>System architecture/Screenshots</h2>
+            </div>
+            <div class="row">
+                <p></p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="contact-section bg-black">
+        <div class="container">
+            <div class="social d-flex justify-content-center">
+                <a href="https://www.linkedin.com/in/hsin-han-wu-1b1955b2/" class="mx-2">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://www.facebook.com/dopey30088" class="mx-2">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://github.com/evanshwu" class="mx-2">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black small text-center text-white-50">
+        <div class="container">
+            Copyright &copy; Hsin-Han Wu 2018
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="../js/grayscale.min.js"></script>
+
+</body>
+
+</html>
