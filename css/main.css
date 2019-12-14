@@ -47,9 +47,9 @@
       content: "";
       height: 100%;
       width: 5px;
-      background: rgba(217, 253, 9, 0.2);/* the line */
+      background: rgba(0, 0, 0, 0.2);/* the line */
       position: absolute;
-      left: 46%;
+      left: 50%;
       transform: translateX(-50%);
       top: -5px; }
     .tabs_inner .tab-content .tab-pane .list li {
@@ -60,9 +60,9 @@
         width: 15px;
         border-radius: 50%;
         display: block;
-        background: rgba(0, 255, 0, 0.2);/* circle dot outer */
+        background: rgba(0, 0, 0, 0.2);/* circle dot outer */
         position: absolute;
-        left: 46%;
+        left: 50%;
         top: 30px;
         transform: translateX(-50%); }
         .tabs_inner .tab-content .tab-pane .list li span:before {
