@@ -69,7 +69,7 @@
           content: '';
           height: 7px;
           width: 7px;
-          background: rgb(255, 0, 0);/* circle dot inner*/
+          background: rgb(0, 0, 0);/* circle dot inner*/
           border-radius: 50%;
           position: absolute;
           left: 52%;
@@ -84,8 +84,9 @@
           margin-bottom: 0px;
           padding-top: 20px; }
       .tabs_inner .tab-content .tab-pane .list li .media .media-body h4 {
-        color: rgb(209, 102, 102);/* job title */
+        color: rgb(220, 102, 102);/* job title */
         font-size: 21px;
+        font-weight: bold;
         text-transform: uppercase;
         margin-bottom: 20px; }
       .tabs_inner .tab-content .tab-pane .list li .media .media-body p {
