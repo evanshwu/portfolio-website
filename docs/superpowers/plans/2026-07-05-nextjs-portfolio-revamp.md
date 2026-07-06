@@ -39,11 +39,11 @@ Everything through Phase 5 is identical for both options.
 
 ### Phase 1: Scaffold & Foundations
 
-- [ ] Create branch `nextjs-revamp` from `master`.
-- [ ] Scaffold Next.js (App Router) + TypeScript + Tailwind CSS at the repo root; move the legacy site files into `legacy/` (kept for content reference until cutover, then deleted).
-- [ ] Add ESLint + Prettier, `npm run dev/build/lint` scripts, and a `README.md` that documents: how to run locally, how to add a project page, how deployment works.
-- [ ] Configure static generation (use `output: 'export'` if the AWS/S3 path is likely; plain static prerendering is fine for Vercel).
-- [ ] Verify: `npm run dev` serves a placeholder homepage; `npm run build` succeeds cleanly.
+- [x] Create branch `nextjs-revamp` from `master`.
+- [x] Scaffold Next.js (App Router) + TypeScript + Tailwind CSS at the repo root; move the legacy site files into `legacy/` (kept for content reference until cutover, then deleted).
+- [x] Add ESLint + Prettier, `npm run dev/build/lint` scripts, and a `README.md` that documents: how to run locally, how to add a project page, how deployment works.
+- [x] Configure static generation (use `output: 'export'` if the AWS/S3 path is likely; plain static prerendering is fine for Vercel). _Chose default static prerendering (both routes prerender static); `output: "export"` is a one-line switch if AWS is picked in Phase 6 — noted in README._
+- [x] Verify: `npm run dev` serves a placeholder homepage; `npm run build` succeeds cleanly. _Verified 2026-07-06: build clean, homepage 200 + screenshot, no console errors. Note: dev server used port 3001 locally (3000 occupied by another app)._
 
 **Deliverable:** An empty but building Next.js app on its own branch, with the legacy site preserved.
 
