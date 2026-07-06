@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Website
 
-## Getting Started
+Personal portfolio of Hsin-Han (Evan) Wu, rebuilt with [Next.js](https://nextjs.org) (App Router), TypeScript, and Tailwind CSS.
 
-First, run the development server:
+> **Migration in progress.** The previous static site lives in `legacy/` for reference and is deleted at cutover. The full migration plan is in `docs/superpowers/plans/2026-07-05-nextjs-portfolio-revamp.md`.
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev       # dev server at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build     # production build
+npm run start     # serve the production build
+npm run lint      # ESLint
+npm run format    # Prettier (writes)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How to add a project page
 
-## Learn More
+_Coming in Phase 3 of the plan._ The target workflow: drop one `.mdx` file into `content/projects/` with frontmatter (`title`, `summary`, `date`, `tech`, `coverImage`, `links`) — the page, its URL, and its card on `/projects` are generated automatically. No code changes needed.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+_Coming in Phase 6 of the plan._ The target workflow: push to `master` and CI deploys automatically (Vercel recommended; AWS S3 + CloudFront as the keep-AWS alternative). Until cutover, the live site is still served from EC2 + nginx off `master` — this branch (`nextjs-revamp`) does not affect production.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Static export note
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app currently uses Next.js's default static prerendering, which is what Vercel wants. If the AWS/S3 hosting path is chosen in Phase 6, set `output: "export"` in `next.config.ts` to emit a fully static `out/` directory (and configure an image loader, since `next/image` optimization needs one under static export).
