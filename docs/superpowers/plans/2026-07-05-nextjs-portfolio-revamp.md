@@ -29,6 +29,7 @@
 ## Key Decision (make at Phase 6, doesn't block earlier phases)
 
 **Hosting: Vercel (recommended) vs. stay on AWS.**
+
 - **Vercel (recommended):** connect the GitHub repo once; every push deploys, every PR gets a preview URL. Free hobby tier is sufficient for a portfolio. Point the domain's DNS at Vercel; the EC2 instance can then be shut down (cost savings).
 - **Keep AWS:** GitHub Actions builds a static export (`output: 'export'`) and syncs to S3 behind CloudFront (preferred AWS shape — no server to patch), or, as a minimal-change variant, rsyncs the export to the existing EC2/nginx box. Still push-to-deploy, but you own the pipeline and the AWS bill.
 
