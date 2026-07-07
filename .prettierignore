@@ -4,3 +4,5 @@ out/
 build/
 legacy/
 package-lock.json
+.gstack/
+.superpowers/
