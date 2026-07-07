@@ -49,10 +49,10 @@ Everything through Phase 5 is identical for both options.
 
 ### Phase 2: Design System & Site Shell
 
-- [ ] Define a small design system with Tailwind: type scale, spacing, a restrained professional palette, dark/light mode. Aim for a clean, modern engineer-portfolio look (generous whitespace, strong typography, subtle motion) — not a heavy template. Consult a design skill (e.g. `frontend-design`) when expanding this phase.
-- [ ] Build the shared shell: responsive header nav, footer (GitHub / LinkedIn / email links), and root layout with global metadata.
-- [ ] Nav links must be driven by a single site config (one array of `{title, href}`), so adding a page to the nav is a one-line change.
-- [ ] Verify: shell renders correctly on mobile and desktop widths; dark/light both legible.
+- [x] Define a small design system with Tailwind: type scale, spacing, a restrained professional palette, dark/light mode. Aim for a clean, modern engineer-portfolio look (generous whitespace, strong typography, subtle motion) — not a heavy template. Consult a design skill (e.g. `frontend-design`) when expanding this phase. _Done: zinc base + legacy brand teal accent (AA contrast both modes), Geist Sans/Mono, tokens in `globals.css` `@theme`, dark via `prefers-color-scheme` (no toggle — deliberate)._
+- [x] Build the shared shell: responsive header nav, footer (GitHub / LinkedIn / email links), and root layout with global metadata. _Done: `site-header.tsx` (sticky, accessible disclosure menu, active-link underline), `site-footer.tsx`, layout metadata from siteConfig; `/projects` stub so nav isn't a 404._
+- [x] Nav links must be driven by a single site config (one array of `{title, href}`), so adding a page to the nav is a one-line change. _Done: `src/config/site.ts` `nav` array; header (desktop+mobile) iterates it._
+- [x] Verify: shell renders correctly on mobile and desktop widths; dark/light both legible. _Verified 2026-07-06 via screenshots (desktop/mobile × light/dark + open menu); reviewed by subagent, 1 Important fix (drawer state on history nav) applied and re-approved._
 
 **Deliverable:** A consistent, professional-looking frame every page inherits.
 
