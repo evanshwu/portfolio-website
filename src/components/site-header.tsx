@@ -68,6 +68,19 @@ export function SiteHeader() {
 
         <nav aria-label="Primary" className="hidden items-center gap-7 sm:flex">
           {siteConfig.nav.map((item) => {
+            if ("external" in item && item.external) {
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                >
+                  {item.title}
+                </a>
+              );
+            }
             const active = isActive(pathname, item.href);
             return (
               <Link
@@ -122,6 +135,21 @@ export function SiteHeader() {
       >
         <ul className="container-page flex flex-col py-2">
           {siteConfig.nav.map((item) => {
+            if ("external" in item && item.external) {
+              return (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={closePanel}
+                    className="text-muted-foreground hover:text-foreground block border-l-2 border-transparent py-2 pl-3 text-sm transition-colors"
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              );
+            }
             const active = isActive(pathname, item.href);
             return (
               <li key={item.href}>
