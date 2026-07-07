@@ -5,7 +5,7 @@ export default function Home() {
         Software Engineer
       </p>
       <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-        {"Hsin-Han (Evan) Wu"}
+        Hsin-Han (Evan) Wu
       </h1>
       <p className="text-muted-foreground mt-5 max-w-xl text-lg leading-relaxed">
         I build reliable software and care about getting the details right. This
