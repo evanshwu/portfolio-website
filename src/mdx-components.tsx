@@ -66,10 +66,13 @@ const components = {
     // Migrated body screenshots are pre-sized static assets in /public.
     // next/image adds nothing here (images are unoptimized and served as-is)
     // and markdown can only emit a plain <img>, so render one directly with
-    // the design-system framing.
+    // the design-system framing. Body images always sit below the fold, so
+    // lazy-load them: they must not compete with the page's LCP cover image.
     // eslint-disable-next-line @next/next/no-img-element
     <img
       alt={alt}
+      loading="lazy"
+      decoding="async"
       className="border-border mt-6 w-full rounded-lg border"
       {...props}
     />
