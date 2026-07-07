@@ -79,11 +79,11 @@ Everything through Phase 5 is identical for both options.
 
 ### Phase 5: SEO, Performance & Polish
 
-- [ ] Per-page metadata via the Metadata API: titles, descriptions, Open Graph + Twitter cards (project pages use their frontmatter), canonical URLs.
-- [ ] Generate `sitemap.xml` and `robots.txt`; add favicon/manifest wiring.
-- [ ] Accessibility pass: semantic landmarks, alt text, focus states, color contrast.
-- [ ] Run Lighthouse; fix until all four categories ≥ 95.
-- [ ] Verify on real mobile viewport sizes and in both color schemes.
+- [x] Per-page metadata via the Metadata API: titles, descriptions, Open Graph + Twitter cards (project pages use their frontmatter), canonical URLs. _Done: `src/lib/seo.ts` pageMetadata() composes complete OG/Twitter/canonical per page (shallow-merge-safe); project pages derive from frontmatter via generateMetadata; every absolute URL resolves via metadataBase from siteConfig.url (placeholder — swap at Phase 6 is one line)._
+- [x] Generate `sitemap.xml` and `robots.txt`; add favicon/manifest wiring. _Done: sitemap.ts/robots.ts/manifest.ts file conventions, all static, sitemap derived from the content collections (drop-in preserved); manifest icons are byte-identical legacy copies (96/144/192/310, md5-verified); dropped browserconfig.xml + stale legacy manifest.json._
+- [x] Accessibility pass: semantic landmarks, alt text, focus states, color contrast. _Done: verification pass found no defects (Phase 2–4 baseline already satisfied the checklist); Lighthouse Accessibility 100 on all audited pages._
+- [x] Run Lighthouse; fix until all four categories ≥ 95. _Done (localhost proxy): home 97, /projects 98, fridgepi 95 median Performance; A11y/BP/SEO 100 everywhere. Fixes: priority→preload, preload/fetchPriority doc conflict resolved (review loop), fridgepi cover right-sized 200KB→72KB, body images lazy. fridgepi Perf is boundary-sensitive under local Lantern simulation (91–100 on identical builds = host-load noise) — re-validate on production hosting at Phase 6._
+- [x] Verify on real mobile viewport sizes and in both color schemes. _Verified 2026-07-07: prod-build QA, desktop (1440) + mobile (390) × light/dark screenshots clean; rendered-head checks (og:url/canonical/manifest/sitemap/robots) all correct._
 
 **Deliverable:** A site that looks professional to humans and to crawlers/link previews.
 
