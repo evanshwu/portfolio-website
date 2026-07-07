@@ -68,12 +68,12 @@ Everything through Phase 5 is identical for both options.
 
 ### Phase 4: Content Migration
 
-- [ ] Port homepage content from `legacy/index.html`: hero (name, title line), about section, skills section (restructure into scannable groups rather than a wall of badges).
-- [ ] Rewrite the four project pages (`watchdogpi`, `kourse`, `fridgepi`, `chatbot`) as MDX files, improving the copy into short case-study form: problem → what I built → tech → outcome.
-- [ ] Migrate images into the app with `next/image` (optimized, properly sized); migrate the publications PDF and link it from an appropriate section; keep the favicon set.
-- [ ] Add a resume/CV link (reuse the existing resume link from the legacy site).
-- [ ] **Drop the `#signup` newsletter section** unless there is a real working backend behind it (flag to Evan if in doubt — a dead signup form looks unprofessional).
-- [ ] Verify: every piece of legacy content is either migrated or explicitly listed as intentionally dropped.
+- [x] Port homepage content from `legacy/index.html`: hero (name, title line), about section, skills section (restructure into scannable groups rather than a wall of badges). _Done: hero + about (portrait, bio, experience/education timeline from the legacy tabs) + skills in 4 pill groups + projects teaser reusing ProjectCard._
+- [x] Rewrite the four project pages (`watchdogpi`, `kourse`, `fridgepi`, `chatbot`) as MDX files, improving the copy into short case-study form: problem → what I built → tech → outcome. _Done at exact slugs. Note: legacy chatbot.html was an empty template clone; page reconstructed truthfully from the Botpress embed in legacy index.html — Evan to confirm keep-vs-drop. Dates: kourse/fridgepi content-derived; chatbot/watchdogpi estimated._
+- [x] Migrate images into the app with `next/image` (optimized, properly sized); migrate the publications PDF and link it from an appropriate section; keep the favicon set. _Done: 8 images pre-sized ≤300KB/≤1600px (required since images.unoptimized; fridgepi3.png 3.1MB→279KB); PDF → /publications/low-cost-smart-refrigerator.pdf linked from FridgePi; favicon/icon/apple-icon via app-icons conventions (full manifest wiring = Phase 5)._
+- [x] Add a resume/CV link (reuse the existing resume link from the legacy site). _Done: legacy Drive URL in siteConfig.resumeUrl → global nav + hero CTA._
+- [x] **Drop the `#signup` newsletter section** unless there is a real working backend behind it (flag to Evan if in doubt — a dead signup form looks unprofessional). _Dropped without doubt: it was already commented out in the legacy HTML (dead form, no backend)._
+- [x] Verify: every piece of legacy content is either migrated or explicitly listed as intentionally dropped. _Verified 2026-07-07: full audit table in phase4-report.md; reviewer independently spot-checked copy fidelity against legacy source; visual QA desktop/mobile × light/dark passed._
 
 **Deliverable:** Feature-complete new site with all real content.
 
