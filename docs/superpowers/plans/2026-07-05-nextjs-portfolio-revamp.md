@@ -58,11 +58,11 @@ Everything through Phase 5 is identical for both options.
 
 ### Phase 3: Content Engine (the "easy to add pages" requirement)
 
-- [ ] Set up MDX content collections: `content/projects/*.mdx` with typed frontmatter (`title`, `summary`, `date`, `tech[]`, `coverImage`, `links{github?, demo?}`, `featured?`).
-- [ ] Dynamic route `/projects/[slug]` renders any MDX file with a shared, well-designed project-page template (hero image, tech badges, body, links).
-- [ ] `/projects` index page lists all projects from the collection automatically, sorted by date, with cards.
-- [ ] Support the same pattern for standalone pages (`content/pages/*.mdx` → top-level routes) so future pages (blog post, talk, publication) are also just files.
-- [ ] Verify: creating a dummy `content/projects/test.mdx` makes it appear on the index and at its own URL with zero code edits; deleting it removes it.
+- [x] Set up MDX content collections: `content/projects/*.mdx` with typed frontmatter (`title`, `summary`, `date`, `tech[]`, `coverImage`, `links{github?, demo?}`, `featured?`). _Done: `@next/mdx` + dynamic import per bundled Next 16 docs; typed layer in `src/lib/content.ts` with build-time validation (missing field fails build naming file+field); `coverImage` optional since template renders it if present._
+- [x] Dynamic route `/projects/[slug]` renders any MDX file with a shared, well-designed project-page template (hero image, tech badges, body, links). _Done: `generateStaticParams` + `dynamicParams=false`, all routes ○/● static; MDX body styled via `src/mdx-components.tsx`._
+- [x] `/projects` index page lists all projects from the collection automatically, sorted by date, with cards. _Done: newest-first, clickable cards with featured tag + tech badges._
+- [x] Support the same pattern for standalone pages (`content/pages/*.mdx` → top-level routes) so future pages (blog post, talk, publication) are also just files. _Done: `src/app/[slug]/page.tsx`; static routes take precedence so nothing is shadowed._
+- [x] Verify: creating a dummy `content/projects/test.mdx` makes it appear on the index and at its own URL with zero code edits; deleting it removes it. _Verified 2026-07-07 twice (implementer + controller re-run); visual QA desktop/mobile × light/dark passed._
 
 **Deliverable:** Adding a page = adding one MDX file. This is the acceptance test for requirement #3.
 
