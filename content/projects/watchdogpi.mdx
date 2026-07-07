@@ -1,0 +1,51 @@
+---
+title: WatchdogPi — A Smart Doorbell
+summary: A Raspberry Pi Zero doorbell that sees who is at the door and unlocks it through a chat message, using LINE and Telegram bots as the interface.
+date: 2019-03-01
+tech:
+  - Raspberry Pi
+  - Python
+  - JavaScript
+  - PHP
+  - AWS EC2
+  - LINE Messaging API
+  - Telegram Bot API
+coverImage: /projects/watchdogpi-cover.jpg
+---
+
+## The problem
+
+Getting locked out is more than an inconvenience — people have been hurt trying
+to climb into their own apartments after forgetting a key. I wanted a doorbell
+that could show me who was at the door from anywhere and let me open it without
+carrying keys or installing yet another app.
+
+## What I built
+
+WatchdogPi is a smart doorbell built on a Raspberry Pi Zero, small enough to
+replace an existing doorbell. A Pi camera module captures whoever is at the
+door (and can be swapped for an IR module for low light), while an attached IR
+transmitter drives my building's access-control system to open the door
+downstairs. Instead of a custom app, the controls live in chat: LINE and
+Telegram bots relay commands to a back-end server, so anyone can operate it
+from a messaging app they already use every day.
+
+![WatchdogPi system architecture: the Raspberry Pi, camera, and IR transmitter talk to an AWS EC2 back-end and a NAS server, controlled through LINE and Telegram bots](/projects/watchdogpi-cover.jpg)
+
+Photos and commands flow between the Raspberry Pi and an AWS EC2 back-end, with
+captured videos and photos archived to a NAS server. When the server receives
+an "open" command from a bot, the Pi fires the IR signal to release the door.
+
+## Tech
+
+A Raspberry Pi Zero with a camera module and IR transmitter, Python on the
+device, a JavaScript/PHP back-end on AWS EC2, a NAS server for media, and LINE
+and Telegram bots as the control surface.
+
+## Outcome
+
+WatchdogPi works against my own apartment's access-control system, opening the
+downstairs door from a chat message. Because the design is tuned to one
+building, it is not plug-and-play everywhere: IR range weakens on higher floors
+and, in rare cases, the open signal has to be sent twice. It remains an evolving
+hobby project rather than a finished product.

@@ -1,0 +1,61 @@
+---
+title: FridgePi
+summary: A low-cost smart refrigerator built on Raspberry Pi that helps families track groceries and cut food waste — published at IEEE EDGE 2017.
+date: 2017-06-25
+tech:
+  - Raspberry Pi
+  - Qt / C++
+  - Python
+  - Android
+  - Node.js
+  - Google Firebase
+coverImage: /projects/fridgepi-cover.jpg
+featured: true
+---
+
+## The problem
+
+Smart-home appliances promise to make the kitchen more convenient, but a
+connected refrigerator usually means buying a new one. Meanwhile, households
+keep throwing away food simply because it is hard to remember what is in the
+fridge and when it expires. We wanted the smart-refrigerator experience at a
+price any family could afford — and without replacing the appliance they
+already own.
+
+## What I built
+
+FridgePi is a low-cost smart refrigerator system built around a Raspberry Pi
+that installs inside an existing fridge. A light sensor detects when the door
+opens and triggers a camera to capture what is inside; a second camera with an
+IR sensor lets you "scan" a new item just by holding it up to the device. Every
+capture syncs through Google Firebase to a companion Android app, where each
+item carries a photo, an expiration date, a quantity, and a storage location.
+Before something expires, the app pushes a reminder to cook or eat it. A
+touchscreen GUI on the Pi manages the same food list on the device itself.
+
+![The FridgePi build: a Raspberry Pi, the Camera Module V2, a touchscreen, and a companion phone](/projects/fridgepi-cover.jpg)
+
+![The finished FridgePi device mounted on a refrigerator door, running its touchscreen GUI](/projects/fridgepi-device.jpg)
+
+![The FridgePi Android app: recipe suggestions, an expiry calendar, the item list, and a live photo of the fridge interior](/projects/fridgepi-system.jpg)
+
+As team lead, I managed the development schedule, designed the hardware
+architecture, and built the Qt application that runs on the Raspberry Pi. I
+researched and selected the sensors and components, designed the API between
+the GUI and the database, and delivered the final project presentation.
+
+## Tech
+
+Qt/C++ for the on-device GUI, Python on the Raspberry Pi, an Android companion
+app, a Node.js back-end, and Google Firebase for image storage and real-time
+sync across devices.
+
+## Outcome
+
+FridgePi was published at the IEEE International Conference on Edge Computing
+(EDGE) 2017. You can read the [full publication](/publications/low-cost-smart-refrigerator.pdf),
+view the [conference abstract on IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/8029282/),
+or browse the [original presentation slides](https://1drv.ms/p/s!AhJXU6FZ890TiB2_6kT3L9_oCoD3).
+
+Built with teammates Chih-Yuan ("Jordan") Wang, Nai-Chen ("Alice") Guo, and
+Yen-Hung ("Harry") Liao, and advised by Professor Yung-Ting Chuang.

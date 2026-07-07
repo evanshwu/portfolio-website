@@ -62,6 +62,18 @@ const components = {
   hr: (props: ComponentPropsWithoutRef<"hr">) => (
     <hr className="border-border mt-10" {...props} />
   ),
+  img: ({ alt = "", ...props }: ComponentPropsWithoutRef<"img">) => (
+    // Migrated body screenshots are pre-sized static assets in /public.
+    // next/image adds nothing here (images are unoptimized and served as-is)
+    // and markdown can only emit a plain <img>, so render one directly with
+    // the design-system framing.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      alt={alt}
+      className="border-border mt-6 w-full rounded-lg border"
+      {...props}
+    />
+  ),
   strong: (props: ComponentPropsWithoutRef<"strong">) => (
     <strong className="text-foreground font-semibold" {...props} />
   ),
