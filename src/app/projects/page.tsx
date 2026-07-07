@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 
 import { ProjectCard } from "@/components/project-card";
 import { getAllProjects } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Projects",
-  description: "Selected projects and engineering work by Evan Wu.",
-};
+  description:
+    "Selected work by Hsin-Han (Evan) Wu — from Raspberry Pi hardware hacks to full-stack web apps.",
+  path: "/projects",
+});
 
 export default function ProjectsPage() {
   const projects = getAllProjects();

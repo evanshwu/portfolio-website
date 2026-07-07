@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { formatDate, getProjectBySlug, getProjectSlugs } from "@/lib/content";
 import { loadMdxBody } from "@/lib/mdx";
+import { DEFAULT_OG_IMAGE, pageMetadata } from "@/lib/seo";
 
 // Only the slugs backed by a real MDX file are rendered; anything else 404s.
 export const dynamicParams = false;
@@ -21,16 +22,18 @@ export async function generateMetadata({
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-  return {
+  return pageMetadata({
     title: project.title,
     description: project.summary,
-    openGraph: {
-      title: project.title,
-      description: project.summary,
-      type: "article",
-      images: project.coverImage ? [project.coverImage] : undefined,
-    },
-  };
+    path: `/projects/${project.slug}`,
+    type: "article",
+    // Prefer the project's own 16:9 cover for a large share card; fall back to
+    // the site portrait when a project has no cover.
+    image: project.coverImage
+      ? { url: project.coverImage, alt: `${project.title} — project cover` }
+      : DEFAULT_OG_IMAGE,
+    twitterCard: project.coverImage ? "summary_large_image" : "summary",
+  });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

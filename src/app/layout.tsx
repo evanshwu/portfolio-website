@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/config/site";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,6 +24,31 @@ export const metadata: Metadata = {
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  // Site-wide defaults; individual pages override title/description/canonical
+  // and (for projects) the share image via the `pageMetadata` helper.
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.fullName,
+    locale: "en_US",
+    url: "/",
+    title: siteConfig.fullName,
+    description: siteConfig.description,
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary",
+    title: siteConfig.fullName,
+    description: siteConfig.description,
+    images: [{ url: DEFAULT_OG_IMAGE.url, alt: DEFAULT_OG_IMAGE.alt }],
+  },
+};
+
+export const viewport: Viewport = {
+  // Match the browser UI to each color scheme (globals.css theme tokens).
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({

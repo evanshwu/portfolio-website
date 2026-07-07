@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import { ProjectCard } from "@/components/project-card";
 import { siteConfig } from "@/config/site";
 import { getAllProjects } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  titleOverride: `${siteConfig.fullName} — Software Engineer`,
+  description:
+    "Software engineer with a master's from Carnegie Mellon, building reliable software across the stack — from Raspberry Pi and IoT hardware to web and cloud back-ends.",
+  path: "/",
+});
 
 const experience = [
   {

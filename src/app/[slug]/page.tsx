@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 
+import { siteConfig } from "@/config/site";
 import { getPageBySlug, getPageSlugs } from "@/lib/content";
 import { loadMdxBody } from "@/lib/mdx";
+import { pageMetadata } from "@/lib/seo";
 
 // Top-level routes backed by content/pages/*.mdx (e.g. /about, /uses). Static
 // routes such as `/`, `/projects`, and `/projects/[slug]` take precedence over
@@ -21,10 +23,11 @@ export async function generateMetadata({
 }: StandalonePageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = getPageBySlug(slug);
-  return {
+  return pageMetadata({
     title: page.title,
-    description: page.summary,
-  };
+    description: page.summary ?? siteConfig.description,
+    path: `/${page.slug}`,
+  });
 }
 
 export default async function StandalonePage({ params }: StandalonePageProps) {
