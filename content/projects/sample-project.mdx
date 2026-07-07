@@ -1,0 +1,43 @@
+---
+title: Sample Project
+summary: A placeholder project that exercises every frontmatter field and MDX body feature. Replaced with real work in Phase 4.
+date: 2024-05-01
+tech:
+  - TypeScript
+  - Next.js
+  - MDX
+  - Tailwind CSS
+coverImage: /sample-project-cover.jpg
+links:
+  github: https://github.com/evanshwu
+  demo: https://example.com
+featured: true
+---
+
+This is a sample project page. It is **placeholder content** used to prove out
+the MDX pipeline during Phase 3 — it is _not_ real work by Evan and will be
+replaced with actual projects in Phase 4.
+
+## Why this page exists
+
+It demonstrates that a project page is nothing more than a single `.mdx` file
+dropped into `content/projects/`. The frontmatter above drives the title, cover
+image, tech badges, and links; everything below the frontmatter is the styled
+MDX body you are reading now.
+
+### What it exercises
+
+- Typed, validated frontmatter (every field, including `featured` and both links)
+- Headings, paragraphs, lists, and inline formatting such as `inline code`
+- A fenced code block with the shared design-system styling
+
+Here is a fenced code block to confirm block-level code rendering:
+
+```ts
+export function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+
+When Phase 4 lands, real projects like WatchdogPi, Kourse, FridgePi, and the
+chatbot replace this file — no code changes required, just new `.mdx` files.
