@@ -129,7 +129,7 @@ export default function Home() {
               src="/me.jpg"
               alt="Portrait of Hsin-Han (Evan) Wu"
               width={600}
-              height={600}
+              height={599}
               className="border-border size-32 shrink-0 rounded-full border object-cover sm:size-40"
             />
             <div>

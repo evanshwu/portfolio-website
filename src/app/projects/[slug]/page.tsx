@@ -66,7 +66,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               src={project.coverImage}
               alt={`${project.title} cover image`}
               fill
-              priority
+              preload
               sizes="(min-width: 56rem) 56rem, 100vw"
               className="object-cover"
             />
