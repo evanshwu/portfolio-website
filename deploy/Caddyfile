@@ -1,0 +1,58 @@
+# Caddy config for the portfolio site (Next.js `output: export` static build).
+#
+# What Caddy does here that nginx used to: serve the static files AND obtain +
+# auto-renew HTTPS certificates from Let's Encrypt (no certbot, no cron). The
+# exported `out/` folder is rsynced to REMOTE_PATH by deploy/deploy.sh.
+#
+# Install on the box (Ubuntu):
+#   sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+#   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+#   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+#   sudo apt update && sudo apt install -y caddy
+# Then put this file at /etc/caddy/Caddyfile and: sudo systemctl reload caddy
+#
+# Requires: DNS A/AAAA records for both evanshwu.com and www.evanshwu.com
+# pointing at this box, and ports 80 + 443 open (Caddy needs 80 for ACME).
+
+www.evanshwu.com {
+	# Must match REMOTE_PATH in deploy/deploy.sh.
+	root * /var/www/portfolio
+	encode gzip zstd
+
+	# `route` forces top-to-bottom evaluation so redirects run before serving.
+	route {
+		# --- Legacy URL redirects (the old Bootstrap site used .html paths) ---
+		# Old indexed/shared links 301 to the new clean canonical URLs.
+		redir /index.html / permanent
+
+		# Strip a trailing slash (except root) so /projects/ -> /projects.
+		@trailingSlash path_regexp trailing ^/(.+)/$
+		redir @trailingSlash /{re.trailing.1} permanent
+
+		# /projects.html -> /projects, /projects/fridgepi.html -> /projects/fridgepi
+		@legacyHtml path_regexp legacy ^/(.+)\.html$
+		redir @legacyHtml /{re.legacy.1} permanent
+
+		# --- Clean URLs -> exported files ---
+		# Try `<path>.html` FIRST: the export writes /projects.html and
+		# /projects/fridgepi.html as flat files, while /projects/<slug>/ dirs
+		# hold only RSC payloads (no index.html). Serving the .html file avoids
+		# a 404 on the index-less directory.
+		try_files {path}.html {path} {path}/index.html
+		file_server
+	}
+
+	# Serve the exported 404 page for unknown routes.
+	handle_errors {
+		@notFound expression {err.status_code} == 404
+		handle @notFound {
+			rewrite * /404.html
+			file_server
+		}
+	}
+}
+
+# Canonical host is www; send the apex there (301), preserving the path.
+evanshwu.com {
+	redir https://www.evanshwu.com{uri} permanent
+}
