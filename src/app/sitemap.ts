@@ -3,6 +3,9 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { getAllProjects, getPageSlugs } from "@/lib/content";
 
+// Emitted as a static file under `output: export` (no request-time data).
+export const dynamic = "force-static";
+
 // Built from the same content collections the routes render, so adding a new
 // MDX file surfaces it in the sitemap with zero edits here. Fully static: no
 // request-time APIs, so `next build` prerenders it to sitemap.xml.

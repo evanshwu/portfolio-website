@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site";
 
+// Emitted as a static file under `output: export` (no request-time data).
+export const dynamic = "force-static";
+
 // Web app manifest (served at /manifest.webmanifest; the file convention also
 // injects <link rel="manifest">). Icons are real PNGs copied from the legacy
 // favicon set into /public/icons — no fabricated sizes. favicon.ico / icon.png

@@ -7,7 +7,7 @@ export const siteConfig = {
   name: "Evan Wu",
   fullName: "Hsin-Han (Evan) Wu",
   description: "Portfolio of Hsin-Han (Evan) Wu, software engineer.",
-  url: "https://evanwu.dev", // placeholder domain; real one set at Phase 6 cutover
+  url: "https://www.evanshwu.com", // production domain (canonical URLs, sitemap, OG tags)
   resumeUrl: RESUME_URL,
   nav: [
     { title: "Home", href: "/" },
