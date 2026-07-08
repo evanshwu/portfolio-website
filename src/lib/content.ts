@@ -111,7 +111,16 @@ function requireIsoDate(
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return value.toISOString().slice(0, 10);
   }
-  if (typeof value === "string" && !Number.isNaN(Date.parse(value))) {
+  // A quoted YAML date stays a string. Require the exact ISO `YYYY-MM-DD`
+  // shape (not just anything Date.parse tolerates): the value is sorted with
+  // localeCompare and rendered into `<time dateTime>`, both of which break on
+  // a free-form string like "May 1, 2024". The Date.parse guard additionally
+  // rejects well-shaped but impossible dates (e.g. 2024-13-45).
+  if (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    !Number.isNaN(Date.parse(value))
+  ) {
     return value;
   }
   fail(
