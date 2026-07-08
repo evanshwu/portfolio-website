@@ -89,12 +89,12 @@ Everything through Phase 5 is identical for both options.
 
 ### Phase 6: CI/CD & Cutover (retires the SSH + nginx workflow)
 
-- [ ] Make the hosting decision (see Key Decision above). Default to Vercel unless Evan says keep AWS.
-- [ ] **If Vercel:** connect repo, set production branch to `master`, verify preview deploys on PRs.
-- [ ] **If AWS:** GitHub Actions workflow — on push to `master`: install, build/export, sync to S3 + CloudFront invalidation (or rsync to EC2 as the minimal variant); store credentials as repo secrets.
-- [ ] Add redirects from all legacy URLs (`/projects/*.html`, `/projects.html`, `/index.html`) to the new routes (platform redirects on Vercel/CloudFront; nginx rewrite rules only in the EC2 variant).
-- [ ] Merge `nextjs-revamp` → `master`; point DNS at the new hosting; confirm HTTPS.
-- [ ] Verify production: all pages load, all legacy URLs redirect, OG previews render (paste a link into a chat app to check).
+- [x] Make the hosting decision (see Key Decision above). _Decided (Evan, 2026-07-08): **keep EC2 but replace nginx with Caddy**, serving a static export; deploy via a manual `./deploy/deploy.sh` (build + rsync). GitHub Actions intentionally skipped — the site updates ~quarterly, so CI's per-deploy savings don't justify maintaining a workflow + SSH deploy key (repo is public, so Actions would have been free, but the cadence makes a one-command script the proportionate tool). Domain: **www.evanshwu.com** (apex → www)._
+- [x] ~~**If Vercel:** connect repo…~~ _N/A — Vercel not chosen._
+- [x] **EC2 variant (chosen):** static export (`output: "export"` in `next.config.ts`) served by Caddy; `deploy/deploy.sh` does build + `rsync --delete out/` to the box; `deploy/Caddyfile` handles serving + auto-HTTPS (Let's Encrypt) + redirects; `deploy/SETUP.md` is the one-time cutover runbook. Export-mode fixes: sitemap/robots/manifest `force-static`; removed the empty standalone-pages `[slug]` route (incompatible with export; preserved in git, restore path in README). Build clean, all 14 routes static.
+- [x] Add redirects from all legacy URLs (`/projects/*.html`, `/projects.html`, `/index.html`) to the new routes. _Done in `deploy/Caddyfile` (301s), plus trailing-slash normalization and apex→www. **Validated locally with Caddy 2.11.4 against the real `out/`:** clean URLs + assets 200, every legacy `.html` and trailing-slash path 301→clean canonical, unknown routes→404.html._
+- [ ] Merge `nextjs-revamp` → `master`; confirm HTTPS. _Pending — awaiting Evan. Repo work committed on `nextjs-revamp` (03dd28c, 878ac07 + docs), not pushed. Same-box cutover: DNS already points at this EC2 instance, so no DNS change is needed — just nginx→Caddy (see `deploy/SETUP.md`). Merge/push held for Evan's go._
+- [ ] Verify production: all pages load, all legacy URLs redirect, OG previews render (paste a link into a chat app to check). _Pending — requires the site live on the box (Evan runs the SETUP.md steps). Also re-run the FridgePi Lighthouse Performance check here (Phase 5 flagged local-simulation noise; production/quiet host expected ≥95 comfortably)._
 
 **Deliverable:** `git push` is the entire deployment process. This is the acceptance test for requirement #4.
 
