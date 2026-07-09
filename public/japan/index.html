@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#165E83">
+<title>Japan 2026 · Itinerary</title>
+<style>
+  :root {
+    --pad: 20px;
+    --paper: #F7F8F5;
+    --card: #FFFFFF;
+    --ink: #1B1D22;
+    --muted: #6A7076;
+    --line: #165E83;          /* ai-iro indigo — the "line color" of this trip */
+    --line-soft: rgba(22, 94, 131, 0.12);
+    --accent: #C0392F;        /* madder red — reserved for "today" + destructive actions */
+    --hairline: #E3E6E2;
+    --font-sign: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    font-family: var(--font-sign);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    border-top: 5px solid var(--line);  /* the colored strip on a station sign */
+    -webkit-font-smoothing: antialiased;
+  }
+  body.sheet-open { overflow: hidden; }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  .wrap { max-width: 620px; margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+
+  /* ---------- header ---------- */
+  .site-head { padding-top: 34px; padding-bottom: 18px; }
+  .head-row { display: flex; align-items: center; gap: 14px; }
+  .line-symbol {
+    flex: none;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--line);
+    color: var(--paper);
+    display: grid; place-items: center;
+    font-size: 22px; font-weight: 700;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+  h1 {
+    font-size: clamp(32px, 8vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .trip-meta {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .trip-meta b { color: var(--line); font-weight: 600; }
+
+  /* ---------- day strip nav ---------- */
+  .day-strip {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .day-strip-inner {
+    display: flex; gap: 10px;
+    overflow-x: auto;
+    padding: 10px var(--pad) 12px;
+    max-width: 620px; margin: 0 auto;
+    scrollbar-width: none;
+  }
+  .day-strip-inner::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px;
+    text-decoration: none;
+    min-width: 44px;
+  }
+  .chip-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2.5px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    display: grid; place-items: center;
+    font-family: var(--font-mono);
+    font-size: 16px; font-weight: 700;
+  }
+  .chip-dow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .chip.on .chip-num { background: var(--line); color: var(--paper); }
+  .chip.is-today .chip-num { border-color: var(--accent); }
+
+  /* ---------- route timeline ---------- */
+  .route {
+    position: relative;
+    padding-top: 30px; padding-bottom: 10px;
+  }
+  .route::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--pad) + 22px); top: 0; bottom: 0;
+    width: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    transform-origin: top;
+    animation: draw 0.9s ease both;
+  }
+  @keyframes draw { from { transform: scaleY(0); } }
+
+  .day {
+    position: relative;
+    padding: 0 0 34px 64px;
+    scroll-margin-top: 76px;
+    animation: rise 0.5s ease both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+  body.ready .day, body.ready .transfer { animation: none; }
+  body.ready .route::before { animation: none; }
+
+  .day-badge {
+    position: absolute;
+    left: 0; top: 0;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 4px solid var(--line);
+    background: var(--card);
+    display: grid; place-items: center;
+    font-family: var(--font-mono);
+    font-size: 20px; font-weight: 700;
+  }
+  .day.is-today .day-badge {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .day-eyebrow {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px;
+    padding-top: 4px;
+  }
+  .day-kanji { font-size: 15px; font-weight: 600; color: var(--line); }
+  .day-date {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+  .today-pill {
+    font-family: var(--font-mono);
+    font-size: 11.5px; font-weight: 700;
+    letter-spacing: 0.12em;
+    background: var(--accent); color: #fff;
+    padding: 2px 8px; border-radius: 99px;
+  }
+
+  .day-city {
+    margin-top: 6px;
+    font-size: 30px; font-weight: 800;
+    letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .day-city .kana { font-size: 17px; font-weight: 600; color: var(--muted); }
+
+  .day-theme { margin-top: 4px; font-size: 16.5px; color: var(--muted); }
+
+  .plans {
+    list-style: none;
+    margin-top: 14px;
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .plans li {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 12px 16px;
+  }
+  .plans li + li { border-top: 1px solid var(--hairline); }
+  .plan-time {
+    flex: none;
+    width: 3.4em;
+    font-family: var(--font-mono);
+    font-size: 14.5px; font-weight: 600;
+    color: var(--line);
+    padding-top: 1px;
+  }
+  .plan-what { font-size: 17px; font-weight: 600; }
+  .plan-note { font-size: 15px; color: var(--muted); margin-top: 1px; }
+
+  .empty {
+    margin-top: 14px;
+    border: 1.5px dashed var(--hairline);
+    border-radius: 14px;
+    padding: 18px 16px;
+    font-size: 16px;
+    color: var(--muted);
+  }
+
+  .day-notes {
+    margin-top: 10px;
+    font-size: 15.5px;
+    color: var(--muted);
+    padding-left: 2px;
+  }
+  .day-notes::before { content: "✎ "; color: var(--line); }
+
+  /* transfer pill between cities */
+  .transfer {
+    position: relative;
+    margin: -8px 0 26px;
+    padding-left: 64px;
+    animation: rise 0.5s ease both;
+  }
+  .transfer span {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--line);
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    border-radius: 99px;
+    padding: 4px 12px;
+  }
+  .transfer::before {
+    content: "▼";
+    position: absolute;
+    left: 18px; top: 2px;
+    font-size: 11px;
+    color: var(--line);
+    background: var(--paper);
+    padding: 2px 0;
+  }
+
+  /* ---------- footer ---------- */
+  .site-foot {
+    border-top: 1px solid var(--hairline);
+    margin-top: 26px;
+    padding-top: 26px; padding-bottom: 90px;
+    text-align: center;
+  }
+  .foot-kana { font-size: 17px; font-weight: 700; color: var(--line); }
+  .foot-note {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .foot-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+
+  .mini {
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 600;
+    color: var(--muted);
+    background: var(--card);
+    border: 1.5px solid var(--hairline);
+    border-radius: 99px;
+    padding: 5px 13px;
+    cursor: pointer;
+  }
+
+  .fab {
+    position: fixed;
+    right: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 30;
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    border: none;
+    background: var(--line);
+    color: #fff;
+    font-size: 22px;
+    font-family: var(--font-sign);
+    box-shadow: 0 4px 14px rgba(20, 22, 26, 0.22);
+    cursor: pointer;
+  }
+
+  /* ---------- bottom sheet dialog ---------- */
+  .sheet-wrap { display: none; position: fixed; inset: 0; z-index: 40; }
+  .sheet-wrap.open { display: block; }
+  .sheet-back { position: absolute; inset: 0; background: rgba(20, 22, 26, 0.42); }
+  .sheet {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    max-width: 620px; margin: 0 auto;
+    background: var(--card);
+    border-radius: 18px 18px 0 0;
+    padding: 22px var(--pad) calc(20px + env(safe-area-inset-bottom));
+    max-height: 82vh;
+    overflow-y: auto;
+    box-shadow: 0 -6px 30px rgba(20, 22, 26, 0.18);
+  }
+  .sheet h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+  .sheet-intro { font-size: 14.5px; color: var(--muted); margin-bottom: 14px; white-space: pre-line; }
+  .field { display: block; margin-bottom: 12px; }
+  .field > span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .field input, .field textarea {
+    width: 100%;
+    font-family: var(--font-sign);
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1.5px solid var(--hairline);
+    border-radius: 10px;
+    padding: 11px 12px;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--line); outline: none; }
+  .field .mono { font-family: var(--font-mono); font-size: 12.5px; }
+  .sheet-actions { display: flex; gap: 10px; align-items: center; margin-top: 16px; }
+  .sheet-actions .spacer { flex: 1; }
+  .btn {
+    font-family: var(--font-sign);
+    font-size: 15.5px; font-weight: 600;
+    padding: 11px 18px;
+    border-radius: 10px;
+    border: 1.5px solid var(--hairline);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--line); border-color: var(--line); color: #fff; }
+  .btn-danger { color: var(--accent); border-color: transparent; padding-left: 0; }
+</style>
+</head>
+<body>
+
+<header class="site-head wrap">
+  <div class="head-row">
+    <div class="line-symbol" aria-hidden="true">旅</div>
+    <div>
+      <div class="eyebrow">旅程 · TRIP ITINERARY</div>
+      <h1 id="trip-title"></h1>
+    </div>
+  </div>
+  <p class="trip-meta" id="trip-meta"></p>
+</header>
+
+<nav class="day-strip" aria-label="Jump to a day">
+  <div class="day-strip-inner" id="day-strip"></div>
+</nav>
+
+<main class="route wrap" id="route"></main>
+
+<footer class="site-foot wrap">
+  <div class="foot-kana">良い旅を</div>
+  <div class="foot-note" id="foot-note"></div>
+  <div class="foot-actions">
+    <button type="button" class="mini" id="refresh-btn" hidden>↻ Refresh</button>
+    <button type="button" class="mini" id="connect-btn"></button>
+    <button type="button" class="mini" id="tsv-btn">Copy data for Sheets</button>
+  </div>
+</footer>
+
+<button type="button" class="fab" id="fab" aria-label="Edit in Google Sheets">✎</button>
+
+<div class="sheet-wrap" id="sheet-wrap">
+  <div class="sheet-back" id="sheet-back"></div>
+  <form class="sheet" id="sheet-form">
+    <h3 id="sheet-title"></h3>
+    <p class="sheet-intro" id="sheet-intro" hidden></p>
+    <div id="sheet-fields"></div>
+    <div class="sheet-actions">
+      <button type="button" class="btn btn-danger" id="sheet-delete" hidden>Delete</button>
+      <button type="button" class="btn" id="sheet-extra" hidden></button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="sheet-cancel">Cancel</button>
+      <button type="submit" class="btn btn-primary" id="sheet-save">Save</button>
+    </div>
+  </form>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   ⚙️  CONFIG
+   sheetUrl: paste your Google Sheet link here to make it the data
+   source on every device (Share → "Anyone with the link → Viewer").
+   You can also connect a sheet from the page footer — that setting
+   is per-device and overrides this one.
+   ════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  sheetUrl: "",
+};
+
+/* ════════════════════════════════════════════════════════════════
+   ✏️  BUILT-IN TRIP DATA — shown when no Google Sheet is connected
+   (and as the offline fallback before the first successful sync).
+   Tap "Copy data for Sheets" on the page to export this structure
+   into a blank Google Sheet and manage plans there.
+   ════════════════════════════════════════════════════════════════ */
+const TRIP = {
+  title: "Japan 2026",
+  days: [
+    {
+      date: "2026-10-12", city: "Tokyo", kana: "東京",
+      theme: "Arrival day — land, settle in, first bites",
+      items: [
+        { time: "14:00", title: "Land at Haneda", note: "grab a Suica / Welcome Suica at the airport" },
+        { time: "16:00", title: "Check in — Shinjuku", note: "" },
+        { time: "19:00", title: "Dinner at Omoide Yokocho", note: "tiny yakitori alleys, cash helps" },
+      ],
+    },
+    {
+      date: "2026-10-13", city: "Tokyo", kana: "東京",
+      theme: "East side classics",
+      items: [
+        { time: "08:00", title: "Tsukiji Outer Market breakfast", note: "" },
+        { time: "10:30", title: "teamLab Planets", note: "book tickets ahead" },
+        { time: "15:00", title: "Shibuya — crossing, Miyashita Park", note: "" },
+      ],
+    },
+    {
+      date: "2026-10-14", city: "Tokyo", kana: "東京",
+      theme: "Open day",
+      items: [],
+      notes: "Ideas: Akihabara, day trip to Kamakura, or Ghibli Museum (book a month ahead)",
+    },
+    {
+      date: "2026-10-15", city: "Hakone", kana: "箱根", via: "Romancecar",
+      theme: "Mountains, ropeway, onsen night",
+      items: [
+        { time: "09:00", title: "Romancecar from Shinjuku", note: "reserve a front-window seat" },
+        { time: "13:00", title: "Hakone loop", note: "ropeway → Owakudani → pirate ship on Lake Ashi" },
+        { time: "16:00", title: "Ryokan check-in + onsen", note: "" },
+      ],
+      notes: "Hakone Free Pass covers the whole loop",
+    },
+    {
+      date: "2026-10-16", city: "Kyoto", kana: "京都", via: "Shinkansen",
+      theme: "Shrines and old lanes",
+      items: [
+        { time: "09:30", title: "Shinkansen to Kyoto", note: "Mt. Fuji side: seat E on the right" },
+        { time: "13:00", title: "Fushimi Inari", note: "the higher you climb, the quieter it gets" },
+        { time: "18:00", title: "Dinner on Pontocho Alley", note: "" },
+      ],
+    },
+    {
+      date: "2026-10-17", city: "Kyoto", kana: "京都",
+      theme: "West side — bamboo and gold",
+      items: [
+        { time: "08:00", title: "Arashiyama bamboo grove", note: "go early, before the crowds" },
+        { time: "11:00", title: "Kinkaku-ji (Golden Pavilion)", note: "" },
+        { time: "15:00", title: "Gion walk + tea", note: "" },
+      ],
+    },
+    {
+      date: "2026-10-18", city: "Osaka", kana: "大阪", via: "JR Special Rapid",
+      theme: "Food city finale",
+      items: [
+        { time: "10:00", title: "Train to Osaka", note: "~30 min" },
+        { time: "12:00", title: "Osaka Castle", note: "" },
+        { time: "18:00", title: "Dotonbori food crawl", note: "takoyaki, kushikatsu, okonomiyaki" },
+      ],
+    },
+  ],
+};
+/* ═══════════════════════════ end of trip data ═══════════════════ */
+
+const URL_KEY = "trip-sheet-url";
+const CACHE_KEY = "trip-sheet-cache-v1";
+
+const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const DOW_JP = ["日", "月", "火", "水", "木", "金", "土"];
+const MON = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const KANJI = ["一", "二", "三", "四", "五", "六", "七", "八", "九"];
+
+function kanjiNum(n) {
+  if (n <= 9) return KANJI[n - 1];
+  if (n === 10) return "十";
+  const tens = Math.floor(n / 10), ones = n % 10;
+  return (tens > 1 ? KANJI[tens - 1] : "") + "十" + (ones ? KANJI[ones - 1] : "");
+}
+
+function parseDate(s) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s || "")) return null;
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+const clone = o => JSON.parse(JSON.stringify(o));
+const dateKey = d => d ? [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-") : "";
+
+/* timed entries sort chronologically, untimed keep their order at the end */
+function timeKey(s) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec((s || "").trim());
+  return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+}
+function sortItems(items) {
+  return items.map((it, i) => ({ it, i, k: timeKey(it.time) }))
+    .sort((a, b) => a.k == null && b.k == null ? a.i - b.i
+      : a.k == null ? 1 : b.k == null ? -1 : (a.k - b.k) || (a.i - b.i))
+    .map(x => x.it);
+}
+function sortDays(days) {
+  return days.map((d, i) => { const p = parseDate(d.date); return { d, i, k: p ? p.getTime() : null }; })
+    .sort((a, b) => a.k == null && b.k == null ? a.i - b.i
+      : a.k == null ? 1 : b.k == null ? -1 : (a.k - b.k) || (a.i - b.i))
+    .map(x => x.d);
+}
+
+/* ---------- sheet url + cache ---------- */
+function getSheetUrl() {
+  try { return localStorage.getItem(URL_KEY) || CONFIG.sheetUrl || ""; }
+  catch (e) { return CONFIG.sheetUrl || ""; }
+}
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const c = JSON.parse(raw);
+      if (c && c.trip && Array.isArray(c.trip.days)) return c;
+    }
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
+/* turn any Google Sheet link into a CSV endpoint */
+function toCsvUrl(u) {
+  u = (u || "").trim();
+  if (!u) return "";
+  if (/\.csv(\?|#|$)/.test(u) || /output=csv/.test(u)) return u;
+  const gid = (/[#?&]gid=(\d+)/.exec(u) || [])[1];
+  const pub = /\/spreadsheets\/d\/e\/([-\w]+)/.exec(u);
+  if (pub) return "https://docs.google.com/spreadsheets/d/e/" + pub[1] + "/pub?output=csv" + (gid ? "&single=true&gid=" + gid : "");
+  const doc = /\/spreadsheets\/d\/([-\w]+)/.exec(u);
+  if (doc) return "https://docs.google.com/spreadsheets/d/" + doc[1] + "/gviz/tq?tqx=out:csv" + (gid ? "&gid=" + gid : "");
+  return u;
+}
+
+/* ---------- csv → trip ---------- */
+function parseCsv(text) {
+  const rows = [];
+  let row = [], field = "", inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQ = false; }
+      else field += c;
+    } else if (c === '"') inQ = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(field); field = "";
+      rows.push(row); row = [];
+    } else field += c;
+  }
+  if (field !== "" || row.length) { row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(c => String(c).trim() !== ""));
+}
+
+function normDate(s) {
+  s = (s || "").trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  let m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s);         // M/D/YYYY (Sheets US default)
+  if (m) return m[3] + "-" + m[1].padStart(2, "0") + "-" + m[2].padStart(2, "0");
+  m = /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/.exec(s);              // YYYY/M/D
+  if (m) return m[1] + "-" + m[2].padStart(2, "0") + "-" + m[3].padStart(2, "0");
+  return s;
+}
+
+const COL_ALIAS = {
+  date: "date", day: "date",
+  city: "city", place: "city",
+  kana: "kana", kanji: "kana", kanakanji: "kana",
+  via: "via", gettingthere: "via", transfer: "via", train: "via",
+  theme: "theme", summary: "theme", daysummary: "theme",
+  time: "time",
+  plan: "title", title: "title", what: "title", activity: "title",
+  note: "note",
+  notes: "dayNotes", daynotes: "dayNotes", reminders: "dayNotes",
+};
+
+function buildTrip(rows) {
+  if (rows.length < 2) return null;
+  const idx = {};
+  rows[0].forEach((h, i) => {
+    const k = COL_ALIAS[String(h).toLowerCase().replace(/[^a-z]/g, "")];
+    if (k && !(k in idx)) idx[k] = i;
+  });
+  if (!("date" in idx) || !("title" in idx)) return null;
+  const get = (r, k) => (k in idx ? String(r[idx[k]] ?? "") : "").trim();
+
+  const byDate = new Map();
+  const order = [];
+  let lastKey = null;
+  rows.slice(1).forEach(r => {
+    const rawDate = normDate(get(r, "date"));
+    const key = rawDate || lastKey || "";
+    lastKey = key;
+    let day = byDate.get(key);
+    if (!day) {
+      day = {
+        date: /^\d{4}-\d{2}-\d{2}$/.test(key) ? key : "",
+        city: "", kana: "", via: "", theme: "", notes: "", items: [],
+      };
+      byDate.set(key, day);
+      order.push(day);
+    }
+    ["city", "kana", "via", "theme"].forEach(k => { if (!day[k]) day[k] = get(r, k); });
+    if (!day.notes) day.notes = get(r, "dayNotes");
+    const title = get(r, "title");
+    if (title) day.items.push({ time: get(r, "time"), title, note: get(r, "note") });
+  });
+
+  const days = sortDays(order.map(d => { d.items = sortItems(d.items); return d; }));
+  if (!days.length || !days.some(d => d.city || d.items.length)) return null;
+  return { title: TRIP.title, days };
+}
+
+/* ---------- trip → paste-ready spreadsheet rows ---------- */
+function tripToTsv(t) {
+  const rows = [["Date", "City", "Kana", "Via", "Theme", "Time", "Plan", "Note", "Day Notes"]];
+  t.days.forEach(d => {
+    if (!d.items.length) {
+      rows.push([d.date || "", d.city || "", d.kana || "", d.via || "", d.theme || "", "", "", "", d.notes || ""]);
+      return;
+    }
+    d.items.forEach((it, j) => rows.push([
+      d.date || "",
+      j === 0 ? d.city || "" : "",
+      j === 0 ? d.kana || "" : "",
+      j === 0 ? d.via || "" : "",
+      j === 0 ? d.theme || "" : "",
+      it.time || "", it.title || "", it.note || "",
+      j === 0 ? d.notes || "" : "",
+    ]));
+  });
+  return rows.map(r => r.map(c => String(c).replace(/[\t\n\r]+/g, " ")).join("\t")).join("\n");
+}
+
+/* ---------- render ---------- */
+let trip;
+let firstRender = true;
+let spy = null;
+
+const strip = document.getElementById("day-strip");
+const route = document.getElementById("route");
+
+function render() {
+  document.getElementById("trip-title").textContent = trip.title;
+  document.title = trip.title + " · Itinerary";
+
+  const todayKey = dateKey(new Date());
+  const dates = trip.days.map(d => parseDate(d.date)).filter(Boolean);
+  const cities = new Set(trip.days.map(d => d.city).filter(Boolean));
+  let range = "";
+  if (dates.length) {
+    const a = dates[0], b = dates[dates.length - 1];
+    range = MON[a.getMonth()] + " " + a.getDate() +
+      (a.getMonth() === b.getMonth() ? "–" + b.getDate() : " – " + MON[b.getMonth()] + " " + b.getDate()) +
+      ", " + b.getFullYear() + " · ";
+  }
+  document.getElementById("trip-meta").innerHTML =
+    esc(range) + "<b>" + trip.days.length + (trip.days.length === 1 ? " day" : " days") + "</b> · " +
+    cities.size + (cities.size === 1 ? " city" : " cities");
+
+  let stripHtml = "";
+  let routeHtml = "";
+  let prevCity = null;
+
+  trip.days.forEach((day, i) => {
+    const n = i + 1;
+    const d = parseDate(day.date);
+    const isToday = d && dateKey(d) === todayKey;
+
+    stripHtml +=
+      `<a class="chip${isToday ? " is-today" : ""}" href="#day-${n}" data-day="${n}">
+         <span class="chip-num">${n}</span>
+         <span class="chip-dow">${d ? DOW_JP[d.getDay()] : "·"}</span>
+       </a>`;
+
+    if (prevCity && day.city !== prevCity) {
+      routeHtml +=
+        `<div class="transfer" style="animation-delay:${i * 70}ms">
+           <span>${esc(day.via ? day.via + " → " : "→ ")}${esc(day.city)} ${esc(day.kana || "")}</span>
+         </div>`;
+    }
+    prevCity = day.city;
+
+    const rows = (day.items || []).map(it =>
+      `<li>
+         <span class="plan-time">${esc(it.time || "–")}</span>
+         <div>
+           <div class="plan-what">${esc(it.title)}</div>
+           ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
+         </div>
+       </li>`).join("");
+
+    routeHtml +=
+      `<section class="day${isToday ? " is-today" : ""}" id="day-${n}" data-day="${n}" style="animation-delay:${i * 70}ms">
+         <div class="day-badge">${n}</div>
+         <div class="day-eyebrow">
+           <span class="day-kanji">${kanjiNum(n)}日目</span>
+           <span class="day-date">${d ? DOW[d.getDay()] + ", " + MON[d.getMonth()] + " " + d.getDate() : "DATE TBD"}</span>
+           ${isToday ? `<span class="today-pill">TODAY 本日</span>` : ""}
+         </div>
+         <h2 class="day-city">${esc(day.city)} <span class="kana">${esc(day.kana || "")}</span></h2>
+         ${day.theme ? `<p class="day-theme">${esc(day.theme)}</p>` : ""}
+         ${rows ? `<ul class="plans">${rows}</ul>`
+                : `<div class="empty">Nothing planned yet — this day is open.</div>`}
+         ${day.notes ? `<p class="day-notes">${esc(day.notes)}</p>` : ""}
+       </section>`;
+  });
+
+  strip.innerHTML = stripHtml;
+  route.innerHTML = routeHtml;
+
+  if (spy) spy.disconnect();
+  const chips = [...strip.querySelectorAll(".chip")];
+  spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        chips.forEach(c => c.classList.toggle("on", c.dataset.day === e.target.dataset.day));
+      }
+    });
+  }, { rootMargin: "-35% 0px -60% 0px" });
+  route.querySelectorAll(".day").forEach(s => spy.observe(s));
+
+  if (firstRender) {
+    firstRender = false;
+    const todayEl = route.querySelector(".day.is-today");
+    if (todayEl) setTimeout(() => todayEl.scrollIntoView({ block: "start" }), 60);
+    setTimeout(() => document.body.classList.add("ready"), 1100);
+  }
+}
+
+/* ---------- status + footer ---------- */
+function fmtStamp(ms) {
+  const d = new Date(ms);
+  return MON[d.getMonth()] + " " + d.getDate() + ", " +
+    String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+function setStatus(msg) { document.getElementById("foot-note").textContent = msg; }
+function refreshFooter() {
+  const url = getSheetUrl();
+  document.getElementById("refresh-btn").hidden = !url;
+  document.getElementById("connect-btn").textContent = url ? "Change sheet…" : "Connect Google Sheet…";
+  document.getElementById("fab").setAttribute("aria-label", url ? "Edit in Google Sheets" : "Connect a Google Sheet");
+}
+
+/* ---------- sync ---------- */
+async function syncFromSheet(manual) {
+  const url = toCsvUrl(getSheetUrl());
+  if (!url) return;
+  setStatus("syncing from Google Sheet…");
+  try {
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), 12000);
+    const res = await fetch(url, { cache: "no-store", redirect: "follow", signal: ctrl.signal });
+    clearTimeout(to);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const text = await res.text();
+    if (/^\s*</.test(text)) throw new Error("not-shared");
+    const t = buildTrip(parseCsv(text));
+    if (!t) throw new Error("no-data");
+    const changed = JSON.stringify(t) !== JSON.stringify(trip);
+    trip = t;
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), trip: t })); } catch (e) {}
+    if (changed) render();
+    setStatus("synced from Google Sheet · " + fmtStamp(Date.now()));
+  } catch (err) {
+    const cache = loadCache();
+    if (cache) setStatus("offline — saved copy from " + fmtStamp(cache.at));
+    else setStatus("couldn't reach the sheet — showing built-in plans");
+    if (manual) {
+      alert(String(err.message) === "no-data"
+        ? "The sheet loaded but no plans were found. Check it has Date and Plan columns (tap \"Copy data for Sheets\" to get the right layout)."
+        : "Couldn't load the sheet — you may be offline, or it isn't shared. Check Share → \"Anyone with the link\" → Viewer, then try again.");
+    }
+  }
+}
+
+/* ---------- bottom sheet dialog ---------- */
+const sheetWrap = document.getElementById("sheet-wrap");
+const sheetForm = document.getElementById("sheet-form");
+const sheetFields = document.getElementById("sheet-fields");
+const sheetIntro = document.getElementById("sheet-intro");
+const sheetDelete = document.getElementById("sheet-delete");
+const sheetExtra = document.getElementById("sheet-extra");
+let sheetCfg = null;
+
+function openSheet(cfg) {
+  sheetCfg = cfg;
+  document.getElementById("sheet-title").textContent = cfg.title;
+  document.getElementById("sheet-save").textContent = cfg.saveLabel || "Save";
+  sheetIntro.hidden = !cfg.intro;
+  sheetIntro.textContent = cfg.intro || "";
+  sheetFields.innerHTML = "";
+  cfg.fields.forEach(f => {
+    const lab = document.createElement("label");
+    lab.className = "field";
+    const cap = document.createElement("span");
+    cap.textContent = f.label;
+    lab.appendChild(cap);
+    const inp = f.textarea ? document.createElement("textarea") : document.createElement("input");
+    if (f.textarea) inp.rows = f.rows || 3;
+    else inp.type = f.type || "text";
+    inp.name = f.key;
+    inp.value = f.value || "";
+    if (f.placeholder) inp.placeholder = f.placeholder;
+    if (f.mono) inp.classList.add("mono");
+    lab.appendChild(inp);
+    sheetFields.appendChild(lab);
+  });
+  sheetDelete.hidden = !cfg.onDelete;
+  sheetDelete.textContent = cfg.deleteLabel || "Delete";
+  sheetExtra.hidden = !cfg.extra;
+  if (cfg.extra) sheetExtra.textContent = cfg.extra.label;
+  sheetWrap.classList.add("open");
+  document.body.classList.add("sheet-open");
+  setTimeout(() => { const el = sheetFields.querySelector("input, textarea"); if (el) el.focus(); }, 60);
+}
+function closeSheet() {
+  sheetCfg = null;
+  sheetWrap.classList.remove("open");
+  document.body.classList.remove("sheet-open");
+}
+sheetForm.addEventListener("submit", e => {
+  e.preventDefault();
+  if (!sheetCfg) return;
+  const vals = {};
+  new FormData(sheetForm).forEach((v, k) => vals[k] = String(v).trim());
+  if (sheetCfg.onSave(vals) !== false) closeSheet();
+});
+sheetDelete.addEventListener("click", () => {
+  if (sheetCfg && sheetCfg.onDelete && sheetCfg.onDelete() !== false) closeSheet();
+});
+sheetExtra.addEventListener("click", () => { if (sheetCfg && sheetCfg.extra) sheetCfg.extra.fn(); });
+document.getElementById("sheet-cancel").addEventListener("click", closeSheet);
+document.getElementById("sheet-back").addEventListener("click", closeSheet);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+/* ---------- dialogs ---------- */
+function openConnect() {
+  const current = (() => { try { return localStorage.getItem(URL_KEY) || ""; } catch (e) { return ""; } })();
+  openSheet({
+    title: "Connect Google Sheet",
+    intro: "1. Make a Google Sheet with your plans — tap \"Copy data for Sheets\" first to get the current trip in the right layout, then paste it into a blank sheet.\n2. Share → \"Anyone with the link\" → Viewer.\n3. Paste the sheet's link below.",
+    saveLabel: "Connect",
+    fields: [{
+      key: "url", label: "Sheet link",
+      value: current || CONFIG.sheetUrl,
+      placeholder: "https://docs.google.com/spreadsheets/…",
+    }],
+    onSave(v) {
+      if (!v.url) { disconnectSheet(); return; }
+      try { localStorage.setItem(URL_KEY, v.url); } catch (e) {}
+      refreshFooter();
+      syncFromSheet(true);
+    },
+    onDelete: (current || CONFIG.sheetUrl) ? () => { disconnectSheet(); } : null,
+    deleteLabel: "Disconnect",
+  });
+}
+function disconnectSheet() {
+  try { localStorage.removeItem(URL_KEY); localStorage.removeItem(CACHE_KEY); } catch (e) {}
+  trip = clone(TRIP);
+  render();
+  refreshFooter();
+  setStatus("plans live in this file — connect a Google Sheet to edit on the go");
+}
+
+function openTsv() {
+  openSheet({
+    title: "Copy data for Sheets",
+    intro: "Paste this into cell A1 of a blank Google Sheet — the header row is included. Repeat the Date on every row of a day (or leave it blank to continue the day above).",
+    saveLabel: "Done",
+    fields: [{
+      key: "tsv", label: "Spreadsheet data", mono: true, textarea: true, rows: 12,
+      value: tripToTsv(trip),
+    }],
+    extra: {
+      label: "Copy",
+      fn() {
+        const ta = sheetFields.querySelector("textarea");
+        ta.select();
+        try { if (navigator.clipboard) navigator.clipboard.writeText(ta.value); } catch (e) {}
+        try { document.execCommand("copy"); } catch (e) {}
+        sheetExtra.textContent = "Copied ✓";
+        setTimeout(() => { sheetExtra.textContent = "Copy"; }, 1500);
+      },
+    },
+    onSave() { /* nothing to save — closes */ },
+  });
+}
+
+/* ---------- wiring ---------- */
+document.getElementById("fab").addEventListener("click", () => {
+  const url = getSheetUrl();
+  if (url) window.open(url, "_blank");
+  else openConnect();
+});
+document.getElementById("connect-btn").addEventListener("click", openConnect);
+document.getElementById("tsv-btn").addEventListener("click", openTsv);
+document.getElementById("refresh-btn").addEventListener("click", () => syncFromSheet(true));
+
+/* ---------- boot ---------- */
+const bootCache = getSheetUrl() ? loadCache() : null;
+trip = bootCache ? bootCache.trip : clone(TRIP);
+render();
+refreshFooter();
+if (getSheetUrl()) {
+  if (bootCache) setStatus("saved copy from " + fmtStamp(bootCache.at));
+  syncFromSheet(false);
+} else {
+  setStatus("plans live in this file — connect a Google Sheet to edit on the go");
+}
+</script>
+</body>
+</html>
