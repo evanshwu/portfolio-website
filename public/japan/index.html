@@ -14,7 +14,7 @@
     --muted: #6A7076;
     --line: #165E83;          /* ai-iro indigo — the "line color" of this trip */
     --line-soft: rgba(22, 94, 131, 0.12);
-    --accent: #C0392F;        /* madder red — reserved for "today" + destructive actions */
+    --accent: #C0392F;        /* madder red — reserved for "today" */
     --hairline: #E3E6E2;
     --font-sign: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
@@ -36,10 +36,9 @@
     border-top: 5px solid var(--line);  /* the colored strip on a station sign */
     -webkit-font-smoothing: antialiased;
   }
-  body.sheet-open { overflow: hidden; }
 
   a { color: inherit; }
-  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  a:focus-visible, summary:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
     border-radius: 6px;
@@ -206,11 +205,11 @@
     border-radius: 14px;
     overflow: hidden;
   }
-  .plans li {
+  .plans > li {
     display: flex; gap: 14px; align-items: flex-start;
     padding: 12px 16px;
   }
-  .plans li + li { border-top: 1px solid var(--hairline); }
+  .plans > li + li { border-top: 1px solid var(--hairline); }
   .plan-time {
     flex: none;
     width: 3.4em;
@@ -219,8 +218,78 @@
     color: var(--line);
     padding-top: 1px;
   }
+  .plan-body { min-width: 0; flex: 1; }
   .plan-what { font-size: 17px; font-weight: 600; }
   .plan-note { font-size: 15px; color: var(--muted); margin-top: 1px; }
+
+  /* map link — opens the Maps app on phones */
+  .map-link {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-family: var(--font-mono);
+    font-size: 12.5px; font-weight: 600;
+    color: var(--line);
+    text-decoration: none;
+    background: var(--line-soft);
+    border-radius: 99px;
+    padding: 1px 9px 1px 7px;
+    margin-left: 7px;
+    vertical-align: 2px;
+    white-space: nowrap;
+  }
+  .map-link .pin { font-size: 11px; line-height: 1; }
+  .map-link:hover { background: var(--line); color: #fff; }
+
+  /* ---------- expandable item ---------- */
+  .plans > li.has-exp { padding-right: 0; }
+  details.exp { flex: 1; min-width: 0; }
+  details.exp > summary {
+    position: relative;
+    list-style: none;
+    cursor: pointer;
+    padding: 1px 30px 1px 0;
+  }
+  details.exp > summary::-webkit-details-marker { display: none; }
+  details.exp > summary::after {
+    content: "⌄";
+    position: absolute;
+    right: 12px; top: -3px;
+    font-family: var(--font-mono);
+    font-size: 19px;
+    color: var(--line);
+    transition: transform 0.2s ease;
+  }
+  details.exp[open] > summary::after { transform: translateY(4px) rotate(180deg); }
+  .exp-hint {
+    font-family: var(--font-mono);
+    font-size: 11.5px; font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--line);
+    background: var(--line-soft);
+    border-radius: 99px;
+    padding: 1px 8px;
+    margin-left: 7px;
+    vertical-align: 2px;
+    white-space: nowrap;
+  }
+  .exp-body {
+    margin: 12px 12px 4px 0;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .opt {
+    border-left: 3px solid var(--line-soft);
+    padding-left: 13px;
+  }
+  .opt-label {
+    font-size: 15.5px; font-weight: 700; color: var(--line);
+    display: flex; flex-wrap: wrap; align-items: center;
+  }
+  .opt-note { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .places { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 9px; }
+  .places li { display: block; padding: 0; border: 0; }
+  .places li + li { border-top: 0; }
+  .place-row { display: flex; flex-wrap: wrap; align-items: center; }
+  .place-name { font-size: 15px; font-weight: 600; }
+  .place-note { font-size: 13.5px; color: var(--muted); margin-top: 1px; }
 
   .empty {
     margin-top: 14px;
@@ -271,97 +340,17 @@
   .site-foot {
     border-top: 1px solid var(--hairline);
     margin-top: 26px;
-    padding-top: 26px; padding-bottom: 90px;
+    padding-top: 26px; padding-bottom: calc(40px + env(safe-area-inset-bottom));
     text-align: center;
   }
   .foot-kana { font-size: 17px; font-weight: 700; color: var(--line); }
-  .foot-note {
-    margin-top: 6px;
+  .foot-route {
+    margin-top: 8px;
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
     color: var(--muted);
   }
-  .foot-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
-
-  .mini {
-    font-family: var(--font-mono);
-    font-size: 12px; font-weight: 600;
-    color: var(--muted);
-    background: var(--card);
-    border: 1.5px solid var(--hairline);
-    border-radius: 99px;
-    padding: 5px 13px;
-    cursor: pointer;
-  }
-
-  .fab {
-    position: fixed;
-    right: 18px;
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 30;
-    width: 54px; height: 54px;
-    border-radius: 50%;
-    border: none;
-    background: var(--line);
-    color: #fff;
-    font-size: 22px;
-    font-family: var(--font-sign);
-    box-shadow: 0 4px 14px rgba(20, 22, 26, 0.22);
-    cursor: pointer;
-  }
-
-  /* ---------- bottom sheet dialog ---------- */
-  .sheet-wrap { display: none; position: fixed; inset: 0; z-index: 40; }
-  .sheet-wrap.open { display: block; }
-  .sheet-back { position: absolute; inset: 0; background: rgba(20, 22, 26, 0.42); }
-  .sheet {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    max-width: 620px; margin: 0 auto;
-    background: var(--card);
-    border-radius: 18px 18px 0 0;
-    padding: 22px var(--pad) calc(20px + env(safe-area-inset-bottom));
-    max-height: 82vh;
-    overflow-y: auto;
-    box-shadow: 0 -6px 30px rgba(20, 22, 26, 0.18);
-  }
-  .sheet h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
-  .sheet-intro { font-size: 14.5px; color: var(--muted); margin-bottom: 14px; white-space: pre-line; }
-  .field { display: block; margin-bottom: 12px; }
-  .field > span {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 11px; letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 5px;
-  }
-  .field input, .field textarea {
-    width: 100%;
-    font-family: var(--font-sign);
-    font-size: 16px;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1.5px solid var(--hairline);
-    border-radius: 10px;
-    padding: 11px 12px;
-  }
-  .field input:focus, .field textarea:focus { border-color: var(--line); outline: none; }
-  .field .mono { font-family: var(--font-mono); font-size: 12.5px; }
-  .sheet-actions { display: flex; gap: 10px; align-items: center; margin-top: 16px; }
-  .sheet-actions .spacer { flex: 1; }
-  .btn {
-    font-family: var(--font-sign);
-    font-size: 15.5px; font-weight: 600;
-    padding: 11px 18px;
-    border-radius: 10px;
-    border: 1.5px solid var(--hairline);
-    background: var(--card);
-    color: var(--ink);
-    cursor: pointer;
-  }
-  .btn-primary { background: var(--line); border-color: var(--line); color: #fff; }
-  .btn-danger { color: var(--accent); border-color: transparent; padding-left: 0; }
 </style>
 </head>
 <body>
@@ -385,49 +374,24 @@
 
 <footer class="site-foot wrap">
   <div class="foot-kana">良い旅を</div>
-  <div class="foot-note" id="foot-note"></div>
-  <div class="foot-actions">
-    <button type="button" class="mini" id="refresh-btn" hidden>↻ Refresh</button>
-    <button type="button" class="mini" id="connect-btn"></button>
-    <button type="button" class="mini" id="tsv-btn">Copy data for Sheets</button>
-  </div>
+  <div class="foot-route" id="foot-route"></div>
 </footer>
-
-<button type="button" class="fab" id="fab" aria-label="Edit in Google Sheets">✎</button>
-
-<div class="sheet-wrap" id="sheet-wrap">
-  <div class="sheet-back" id="sheet-back"></div>
-  <form class="sheet" id="sheet-form">
-    <h3 id="sheet-title"></h3>
-    <p class="sheet-intro" id="sheet-intro" hidden></p>
-    <div id="sheet-fields"></div>
-    <div class="sheet-actions">
-      <button type="button" class="btn btn-danger" id="sheet-delete" hidden>Delete</button>
-      <button type="button" class="btn" id="sheet-extra" hidden></button>
-      <span class="spacer"></span>
-      <button type="button" class="btn" id="sheet-cancel">Cancel</button>
-      <button type="submit" class="btn btn-primary" id="sheet-save">Save</button>
-    </div>
-  </form>
-</div>
 
 <script>
 /* ════════════════════════════════════════════════════════════════
-   ⚙️  CONFIG
-   sheetUrl: paste your Google Sheet link here to make it the data
-   source on every device (Share → "Anyone with the link → Viewer").
-   You can also connect a sheet from the page footer — that setting
-   is per-device and overrides this one.
-   ════════════════════════════════════════════════════════════════ */
-const CONFIG = {
-  sheetUrl: "",
-};
+   ✏️  TRIP DATA — this is the whole itinerary. Edit it here.
+   The page is read-only for anyone viewing it; there's no way to
+   change plans from the UI. To update the trip, edit the days below
+   and redeploy the file.
 
-/* ════════════════════════════════════════════════════════════════
-   ✏️  BUILT-IN TRIP DATA — shown when no Google Sheet is connected
-   (and as the offline fallback before the first successful sync).
-   Tap "Copy data for Sheets" on the page to export this structure
-   into a blank Google Sheet and manage plans there.
+   Each day:   { date:"YYYY-MM-DD", city, kana, via?, theme?, notes?, items:[…] }
+   Each item:  { time?, title, note?, map? }              ← a simple entry
+               { time?, title, note?, options:[…] }       ← an expandable entry
+
+   • map   — a place name (opens Google Maps / the map app on phones)
+             or a full https:// maps link if you have one.
+   • options — turns the entry into a tap-to-expand list of choices.
+     Each option: { label, note?, map?, places:[ { name, note?, map? } ] }
    ════════════════════════════════════════════════════════════════ */
 const TRIP = {
   title: "Japan 2026",
@@ -436,18 +400,37 @@ const TRIP = {
       date: "2026-10-12", city: "Tokyo", kana: "東京",
       theme: "Arrival day — land, settle in, first bites",
       items: [
-        { time: "14:00", title: "Land at Haneda", note: "grab a Suica / Welcome Suica at the airport" },
-        { time: "16:00", title: "Check in — Shinjuku", note: "" },
-        { time: "19:00", title: "Dinner at Omoide Yokocho", note: "tiny yakitori alleys, cash helps" },
+        { time: "14:00", title: "Land at Haneda", note: "grab a Suica / Welcome Suica at the airport", map: "Haneda Airport Tokyo" },
+        { time: "16:00", title: "Check in — Shinjuku", note: "", map: "Shinjuku Station" },
+        {
+          time: "19:00", title: "Dinner", note: "pick one — both are a short walk from the hotel",
+          options: [
+            {
+              label: "Yakitori alleys",
+              note: "tiny smoky counters, cash helps",
+              places: [
+                { name: "Omoide Yokocho", note: "the classic lantern-lit alley", map: "Omoide Yokocho Shinjuku" },
+                { name: "Torikizoku Kabukicho", note: "cheap, cheerful, always open", map: "Torikizoku Kabukicho" },
+              ],
+            },
+            {
+              label: "Ramen",
+              note: "if the flight left everyone tired",
+              places: [
+                { name: "Fuunji", note: "famous tsukemen, expect a line", map: "Fuunji ramen Shinjuku" },
+              ],
+            },
+          ],
+        },
       ],
     },
     {
       date: "2026-10-13", city: "Tokyo", kana: "東京",
       theme: "East side classics",
       items: [
-        { time: "08:00", title: "Tsukiji Outer Market breakfast", note: "" },
-        { time: "10:30", title: "teamLab Planets", note: "book tickets ahead" },
-        { time: "15:00", title: "Shibuya — crossing, Miyashita Park", note: "" },
+        { time: "08:00", title: "Tsukiji Outer Market breakfast", note: "", map: "Tsukiji Outer Market" },
+        { time: "10:30", title: "teamLab Planets", note: "book tickets ahead", map: "teamLab Planets Toyosu" },
+        { time: "15:00", title: "Shibuya — crossing, Miyashita Park", note: "", map: "Shibuya Crossing" },
       ],
     },
     {
@@ -460,8 +443,8 @@ const TRIP = {
       date: "2026-10-15", city: "Hakone", kana: "箱根", via: "Romancecar",
       theme: "Mountains, ropeway, onsen night",
       items: [
-        { time: "09:00", title: "Romancecar from Shinjuku", note: "reserve a front-window seat" },
-        { time: "13:00", title: "Hakone loop", note: "ropeway → Owakudani → pirate ship on Lake Ashi" },
+        { time: "09:00", title: "Romancecar from Shinjuku", note: "reserve a front-window seat", map: "Odakyu Romancecar Shinjuku" },
+        { time: "13:00", title: "Hakone loop", note: "ropeway → Owakudani → pirate ship on Lake Ashi", map: "Owakudani Hakone" },
         { time: "16:00", title: "Ryokan check-in + onsen", note: "" },
       ],
       notes: "Hakone Free Pass covers the whole loop",
@@ -471,17 +454,17 @@ const TRIP = {
       theme: "Shrines and old lanes",
       items: [
         { time: "09:30", title: "Shinkansen to Kyoto", note: "Mt. Fuji side: seat E on the right" },
-        { time: "13:00", title: "Fushimi Inari", note: "the higher you climb, the quieter it gets" },
-        { time: "18:00", title: "Dinner on Pontocho Alley", note: "" },
+        { time: "13:00", title: "Fushimi Inari", note: "the higher you climb, the quieter it gets", map: "Fushimi Inari Taisha" },
+        { time: "18:00", title: "Dinner on Pontocho Alley", note: "", map: "Pontocho Alley Kyoto" },
       ],
     },
     {
       date: "2026-10-17", city: "Kyoto", kana: "京都",
       theme: "West side — bamboo and gold",
       items: [
-        { time: "08:00", title: "Arashiyama bamboo grove", note: "go early, before the crowds" },
-        { time: "11:00", title: "Kinkaku-ji (Golden Pavilion)", note: "" },
-        { time: "15:00", title: "Gion walk + tea", note: "" },
+        { time: "08:00", title: "Arashiyama bamboo grove", note: "go early, before the crowds", map: "Arashiyama Bamboo Grove" },
+        { time: "11:00", title: "Kinkaku-ji (Golden Pavilion)", note: "", map: "Kinkaku-ji" },
+        { time: "15:00", title: "Gion walk + tea", note: "", map: "Gion Kyoto" },
       ],
     },
     {
@@ -489,16 +472,20 @@ const TRIP = {
       theme: "Food city finale",
       items: [
         { time: "10:00", title: "Train to Osaka", note: "~30 min" },
-        { time: "12:00", title: "Osaka Castle", note: "" },
-        { time: "18:00", title: "Dotonbori food crawl", note: "takoyaki, kushikatsu, okonomiyaki" },
+        { time: "12:00", title: "Osaka Castle", note: "", map: "Osaka Castle" },
+        {
+          time: "18:00", title: "Dotonbori food crawl", note: "graze across a few — one bite each",
+          options: [
+            { label: "Takoyaki", note: "octopus balls, the Osaka staple", map: "Takoyaki Doraku Wanaka Dotonbori" },
+            { label: "Kushikatsu", note: "deep-fried skewers — no double-dipping", map: "Kushikatsu Daruma Dotonbori" },
+            { label: "Okonomiyaki", note: "savory griddle pancake", map: "Mizuno Okonomiyaki Dotonbori" },
+          ],
+        },
       ],
     },
   ],
 };
 /* ═══════════════════════════ end of trip data ═══════════════════ */
-
-const URL_KEY = "trip-sheet-url";
-const CACHE_KEY = "trip-sheet-cache-v1";
 
 const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const DOW_JP = ["日", "月", "火", "水", "木", "金", "土"];
@@ -522,7 +509,6 @@ function esc(s) {
   return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
-const clone = o => JSON.parse(JSON.stringify(o));
 const dateKey = d => d ? [d.getFullYear(), d.getMonth() + 1, d.getDate()].join("-") : "";
 
 /* timed entries sort chronologically, untimed keep their order at the end */
@@ -543,143 +529,61 @@ function sortDays(days) {
     .map(x => x.d);
 }
 
-/* ---------- sheet url + cache ---------- */
-function getSheetUrl() {
-  try { return localStorage.getItem(URL_KEY) || CONFIG.sheetUrl || ""; }
-  catch (e) { return CONFIG.sheetUrl || ""; }
+/* a place name or a full URL → a Maps link that opens the app on phones */
+function mapUrl(q) {
+  q = String(q || "").trim();
+  if (!q) return "";
+  if (/^https?:\/\//i.test(q)) return q;
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
 }
-function loadCache() {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    if (raw) {
-      const c = JSON.parse(raw);
-      if (c && c.trip && Array.isArray(c.trip.days)) return c;
-    }
-  } catch (e) { /* ignore */ }
-  return null;
+function mapLink(q, label) {
+  const href = mapUrl(q);
+  if (!href) return "";
+  return ` <a class="map-link" href="${esc(href)}" target="_blank" rel="noopener">` +
+    `<span class="pin" aria-hidden="true">📍</span>${esc(label || "Map")}</a>`;
 }
 
-/* turn any Google Sheet link into a CSV endpoint */
-function toCsvUrl(u) {
-  u = (u || "").trim();
-  if (!u) return "";
-  if (/\.csv(\?|#|$)/.test(u) || /output=csv/.test(u)) return u;
-  const gid = (/[#?&]gid=(\d+)/.exec(u) || [])[1];
-  const pub = /\/spreadsheets\/d\/e\/([-\w]+)/.exec(u);
-  if (pub) return "https://docs.google.com/spreadsheets/d/e/" + pub[1] + "/pub?output=csv" + (gid ? "&single=true&gid=" + gid : "");
-  const doc = /\/spreadsheets\/d\/([-\w]+)/.exec(u);
-  if (doc) return "https://docs.google.com/spreadsheets/d/" + doc[1] + "/gviz/tq?tqx=out:csv" + (gid ? "&gid=" + gid : "");
-  return u;
+function placeHtml(p) {
+  return `<li>
+    <div class="place-row"><span class="place-name">${esc(p.name)}</span>${p.map ? mapLink(p.map) : ""}</div>
+    ${p.note ? `<div class="place-note">${esc(p.note)}</div>` : ""}
+  </li>`;
 }
-
-/* ---------- csv → trip ---------- */
-function parseCsv(text) {
-  const rows = [];
-  let row = [], field = "", inQ = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQ) {
-      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQ = false; }
-      else field += c;
-    } else if (c === '"') inQ = true;
-    else if (c === ",") { row.push(field); field = ""; }
-    else if (c === "\n" || c === "\r") {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      row.push(field); field = "";
-      rows.push(row); row = [];
-    } else field += c;
+function optHtml(o) {
+  const places = (o.places || []).map(placeHtml).join("");
+  return `<div class="opt">
+    <div class="opt-label">${esc(o.label)}${o.map ? mapLink(o.map) : ""}</div>
+    ${o.note ? `<div class="opt-note">${esc(o.note)}</div>` : ""}
+    ${places ? `<ul class="places">${places}</ul>` : ""}
+  </div>`;
+}
+function itemHtml(it) {
+  if (it.options && it.options.length) {
+    const n = it.options.length;
+    return `<li class="has-exp">
+      <span class="plan-time">${esc(it.time || "–")}</span>
+      <details class="exp">
+        <summary>
+          <div class="plan-what">${esc(it.title)}<span class="exp-hint">${n} option${n === 1 ? "" : "s"}</span></div>
+          ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
+        </summary>
+        <div class="exp-body">${it.options.map(optHtml).join("")}</div>
+      </details>
+    </li>`;
   }
-  if (field !== "" || row.length) { row.push(field); rows.push(row); }
-  return rows.filter(r => r.some(c => String(c).trim() !== ""));
-}
-
-function normDate(s) {
-  s = (s || "").trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  let m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s);         // M/D/YYYY (Sheets US default)
-  if (m) return m[3] + "-" + m[1].padStart(2, "0") + "-" + m[2].padStart(2, "0");
-  m = /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/.exec(s);              // YYYY/M/D
-  if (m) return m[1] + "-" + m[2].padStart(2, "0") + "-" + m[3].padStart(2, "0");
-  return s;
-}
-
-const COL_ALIAS = {
-  date: "date", day: "date",
-  city: "city", place: "city",
-  kana: "kana", kanji: "kana", kanakanji: "kana",
-  via: "via", gettingthere: "via", transfer: "via", train: "via",
-  theme: "theme", summary: "theme", daysummary: "theme",
-  time: "time",
-  plan: "title", title: "title", what: "title", activity: "title",
-  note: "note",
-  notes: "dayNotes", daynotes: "dayNotes", reminders: "dayNotes",
-};
-
-function buildTrip(rows) {
-  if (rows.length < 2) return null;
-  const idx = {};
-  rows[0].forEach((h, i) => {
-    const k = COL_ALIAS[String(h).toLowerCase().replace(/[^a-z]/g, "")];
-    if (k && !(k in idx)) idx[k] = i;
-  });
-  if (!("date" in idx) || !("title" in idx)) return null;
-  const get = (r, k) => (k in idx ? String(r[idx[k]] ?? "") : "").trim();
-
-  const byDate = new Map();
-  const order = [];
-  let lastKey = null;
-  rows.slice(1).forEach(r => {
-    const rawDate = normDate(get(r, "date"));
-    const key = rawDate || lastKey || "";
-    lastKey = key;
-    let day = byDate.get(key);
-    if (!day) {
-      day = {
-        date: /^\d{4}-\d{2}-\d{2}$/.test(key) ? key : "",
-        city: "", kana: "", via: "", theme: "", notes: "", items: [],
-      };
-      byDate.set(key, day);
-      order.push(day);
-    }
-    ["city", "kana", "via", "theme"].forEach(k => { if (!day[k]) day[k] = get(r, k); });
-    if (!day.notes) day.notes = get(r, "dayNotes");
-    const title = get(r, "title");
-    if (title) day.items.push({ time: get(r, "time"), title, note: get(r, "note") });
-  });
-
-  const days = sortDays(order.map(d => { d.items = sortItems(d.items); return d; }));
-  if (!days.length || !days.some(d => d.city || d.items.length)) return null;
-  return { title: TRIP.title, days };
-}
-
-/* ---------- trip → paste-ready spreadsheet rows ---------- */
-function tripToTsv(t) {
-  const rows = [["Date", "City", "Kana", "Via", "Theme", "Time", "Plan", "Note", "Day Notes"]];
-  t.days.forEach(d => {
-    if (!d.items.length) {
-      rows.push([d.date || "", d.city || "", d.kana || "", d.via || "", d.theme || "", "", "", "", d.notes || ""]);
-      return;
-    }
-    d.items.forEach((it, j) => rows.push([
-      d.date || "",
-      j === 0 ? d.city || "" : "",
-      j === 0 ? d.kana || "" : "",
-      j === 0 ? d.via || "" : "",
-      j === 0 ? d.theme || "" : "",
-      it.time || "", it.title || "", it.note || "",
-      j === 0 ? d.notes || "" : "",
-    ]));
-  });
-  return rows.map(r => r.map(c => String(c).replace(/[\t\n\r]+/g, " ")).join("\t")).join("\n");
+  return `<li>
+    <span class="plan-time">${esc(it.time || "–")}</span>
+    <div class="plan-body">
+      <div class="plan-what">${esc(it.title)}${it.map ? mapLink(it.map) : ""}</div>
+      ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
+    </div>
+  </li>`;
 }
 
 /* ---------- render ---------- */
-let trip;
-let firstRender = true;
-let spy = null;
-
 const strip = document.getElementById("day-strip");
 const route = document.getElementById("route");
+let trip = { title: TRIP.title, days: sortDays((TRIP.days || []).map(d => ({ ...d, items: sortItems(d.items || []) }))) };
 
 function render() {
   document.getElementById("trip-title").textContent = trip.title;
@@ -687,7 +591,8 @@ function render() {
 
   const todayKey = dateKey(new Date());
   const dates = trip.days.map(d => parseDate(d.date)).filter(Boolean);
-  const cities = new Set(trip.days.map(d => d.city).filter(Boolean));
+  const cityList = trip.days.map(d => d.city).filter(Boolean);
+  const cities = new Set(cityList);
   let range = "";
   if (dates.length) {
     const a = dates[0], b = dates[dates.length - 1];
@@ -698,6 +603,10 @@ function render() {
   document.getElementById("trip-meta").innerHTML =
     esc(range) + "<b>" + trip.days.length + (trip.days.length === 1 ? " day" : " days") + "</b> · " +
     cities.size + (cities.size === 1 ? " city" : " cities");
+
+  /* footer route line — unique cities in order */
+  const routeCities = cityList.filter((c, i) => cityList.indexOf(c) === i);
+  document.getElementById("foot-route").textContent = routeCities.join("  →  ");
 
   let stripHtml = "";
   let routeHtml = "";
@@ -722,14 +631,7 @@ function render() {
     }
     prevCity = day.city;
 
-    const rows = (day.items || []).map(it =>
-      `<li>
-         <span class="plan-time">${esc(it.time || "–")}</span>
-         <div>
-           <div class="plan-what">${esc(it.title)}</div>
-           ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
-         </div>
-       </li>`).join("");
+    const rows = (day.items || []).map(itemHtml).join("");
 
     routeHtml +=
       `<section class="day${isToday ? " is-today" : ""}" id="day-${n}" data-day="${n}" style="animation-delay:${i * 70}ms">
@@ -750,9 +652,8 @@ function render() {
   strip.innerHTML = stripHtml;
   route.innerHTML = routeHtml;
 
-  if (spy) spy.disconnect();
   const chips = [...strip.querySelectorAll(".chip")];
-  spy = new IntersectionObserver(entries => {
+  const spy = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         chips.forEach(c => c.classList.toggle("on", c.dataset.day === e.target.dataset.day));
@@ -761,195 +662,12 @@ function render() {
   }, { rootMargin: "-35% 0px -60% 0px" });
   route.querySelectorAll(".day").forEach(s => spy.observe(s));
 
-  if (firstRender) {
-    firstRender = false;
-    const todayEl = route.querySelector(".day.is-today");
-    if (todayEl) setTimeout(() => todayEl.scrollIntoView({ block: "start" }), 60);
-    setTimeout(() => document.body.classList.add("ready"), 1100);
-  }
+  const todayEl = route.querySelector(".day.is-today");
+  if (todayEl) setTimeout(() => todayEl.scrollIntoView({ block: "start" }), 60);
+  setTimeout(() => document.body.classList.add("ready"), 1100);
 }
 
-/* ---------- status + footer ---------- */
-function fmtStamp(ms) {
-  const d = new Date(ms);
-  return MON[d.getMonth()] + " " + d.getDate() + ", " +
-    String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-}
-function setStatus(msg) { document.getElementById("foot-note").textContent = msg; }
-function refreshFooter() {
-  const url = getSheetUrl();
-  document.getElementById("refresh-btn").hidden = !url;
-  document.getElementById("connect-btn").textContent = url ? "Change sheet…" : "Connect Google Sheet…";
-  document.getElementById("fab").setAttribute("aria-label", url ? "Edit in Google Sheets" : "Connect a Google Sheet");
-}
-
-/* ---------- sync ---------- */
-async function syncFromSheet(manual) {
-  const url = toCsvUrl(getSheetUrl());
-  if (!url) return;
-  setStatus("syncing from Google Sheet…");
-  try {
-    const ctrl = new AbortController();
-    const to = setTimeout(() => ctrl.abort(), 12000);
-    const res = await fetch(url, { cache: "no-store", redirect: "follow", signal: ctrl.signal });
-    clearTimeout(to);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const text = await res.text();
-    if (/^\s*</.test(text)) throw new Error("not-shared");
-    const t = buildTrip(parseCsv(text));
-    if (!t) throw new Error("no-data");
-    const changed = JSON.stringify(t) !== JSON.stringify(trip);
-    trip = t;
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), trip: t })); } catch (e) {}
-    if (changed) render();
-    setStatus("synced from Google Sheet · " + fmtStamp(Date.now()));
-  } catch (err) {
-    const cache = loadCache();
-    if (cache) setStatus("offline — saved copy from " + fmtStamp(cache.at));
-    else setStatus("couldn't reach the sheet — showing built-in plans");
-    if (manual) {
-      alert(String(err.message) === "no-data"
-        ? "The sheet loaded but no plans were found. Check it has Date and Plan columns (tap \"Copy data for Sheets\" to get the right layout)."
-        : "Couldn't load the sheet — you may be offline, or it isn't shared. Check Share → \"Anyone with the link\" → Viewer, then try again.");
-    }
-  }
-}
-
-/* ---------- bottom sheet dialog ---------- */
-const sheetWrap = document.getElementById("sheet-wrap");
-const sheetForm = document.getElementById("sheet-form");
-const sheetFields = document.getElementById("sheet-fields");
-const sheetIntro = document.getElementById("sheet-intro");
-const sheetDelete = document.getElementById("sheet-delete");
-const sheetExtra = document.getElementById("sheet-extra");
-let sheetCfg = null;
-
-function openSheet(cfg) {
-  sheetCfg = cfg;
-  document.getElementById("sheet-title").textContent = cfg.title;
-  document.getElementById("sheet-save").textContent = cfg.saveLabel || "Save";
-  sheetIntro.hidden = !cfg.intro;
-  sheetIntro.textContent = cfg.intro || "";
-  sheetFields.innerHTML = "";
-  cfg.fields.forEach(f => {
-    const lab = document.createElement("label");
-    lab.className = "field";
-    const cap = document.createElement("span");
-    cap.textContent = f.label;
-    lab.appendChild(cap);
-    const inp = f.textarea ? document.createElement("textarea") : document.createElement("input");
-    if (f.textarea) inp.rows = f.rows || 3;
-    else inp.type = f.type || "text";
-    inp.name = f.key;
-    inp.value = f.value || "";
-    if (f.placeholder) inp.placeholder = f.placeholder;
-    if (f.mono) inp.classList.add("mono");
-    lab.appendChild(inp);
-    sheetFields.appendChild(lab);
-  });
-  sheetDelete.hidden = !cfg.onDelete;
-  sheetDelete.textContent = cfg.deleteLabel || "Delete";
-  sheetExtra.hidden = !cfg.extra;
-  if (cfg.extra) sheetExtra.textContent = cfg.extra.label;
-  sheetWrap.classList.add("open");
-  document.body.classList.add("sheet-open");
-  setTimeout(() => { const el = sheetFields.querySelector("input, textarea"); if (el) el.focus(); }, 60);
-}
-function closeSheet() {
-  sheetCfg = null;
-  sheetWrap.classList.remove("open");
-  document.body.classList.remove("sheet-open");
-}
-sheetForm.addEventListener("submit", e => {
-  e.preventDefault();
-  if (!sheetCfg) return;
-  const vals = {};
-  new FormData(sheetForm).forEach((v, k) => vals[k] = String(v).trim());
-  if (sheetCfg.onSave(vals) !== false) closeSheet();
-});
-sheetDelete.addEventListener("click", () => {
-  if (sheetCfg && sheetCfg.onDelete && sheetCfg.onDelete() !== false) closeSheet();
-});
-sheetExtra.addEventListener("click", () => { if (sheetCfg && sheetCfg.extra) sheetCfg.extra.fn(); });
-document.getElementById("sheet-cancel").addEventListener("click", closeSheet);
-document.getElementById("sheet-back").addEventListener("click", closeSheet);
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
-
-/* ---------- dialogs ---------- */
-function openConnect() {
-  const current = (() => { try { return localStorage.getItem(URL_KEY) || ""; } catch (e) { return ""; } })();
-  openSheet({
-    title: "Connect Google Sheet",
-    intro: "1. Make a Google Sheet with your plans — tap \"Copy data for Sheets\" first to get the current trip in the right layout, then paste it into a blank sheet.\n2. Share → \"Anyone with the link\" → Viewer.\n3. Paste the sheet's link below.",
-    saveLabel: "Connect",
-    fields: [{
-      key: "url", label: "Sheet link",
-      value: current || CONFIG.sheetUrl,
-      placeholder: "https://docs.google.com/spreadsheets/…",
-    }],
-    onSave(v) {
-      if (!v.url) { disconnectSheet(); return; }
-      try { localStorage.setItem(URL_KEY, v.url); } catch (e) {}
-      refreshFooter();
-      syncFromSheet(true);
-    },
-    onDelete: (current || CONFIG.sheetUrl) ? () => { disconnectSheet(); } : null,
-    deleteLabel: "Disconnect",
-  });
-}
-function disconnectSheet() {
-  try { localStorage.removeItem(URL_KEY); localStorage.removeItem(CACHE_KEY); } catch (e) {}
-  trip = clone(TRIP);
-  render();
-  refreshFooter();
-  setStatus("plans live in this file — connect a Google Sheet to edit on the go");
-}
-
-function openTsv() {
-  openSheet({
-    title: "Copy data for Sheets",
-    intro: "Paste this into cell A1 of a blank Google Sheet — the header row is included. Repeat the Date on every row of a day (or leave it blank to continue the day above).",
-    saveLabel: "Done",
-    fields: [{
-      key: "tsv", label: "Spreadsheet data", mono: true, textarea: true, rows: 12,
-      value: tripToTsv(trip),
-    }],
-    extra: {
-      label: "Copy",
-      fn() {
-        const ta = sheetFields.querySelector("textarea");
-        ta.select();
-        try { if (navigator.clipboard) navigator.clipboard.writeText(ta.value); } catch (e) {}
-        try { document.execCommand("copy"); } catch (e) {}
-        sheetExtra.textContent = "Copied ✓";
-        setTimeout(() => { sheetExtra.textContent = "Copy"; }, 1500);
-      },
-    },
-    onSave() { /* nothing to save — closes */ },
-  });
-}
-
-/* ---------- wiring ---------- */
-document.getElementById("fab").addEventListener("click", () => {
-  const url = getSheetUrl();
-  if (url) window.open(url, "_blank");
-  else openConnect();
-});
-document.getElementById("connect-btn").addEventListener("click", openConnect);
-document.getElementById("tsv-btn").addEventListener("click", openTsv);
-document.getElementById("refresh-btn").addEventListener("click", () => syncFromSheet(true));
-
-/* ---------- boot ---------- */
-const bootCache = getSheetUrl() ? loadCache() : null;
-trip = bootCache ? bootCache.trip : clone(TRIP);
 render();
-refreshFooter();
-if (getSheetUrl()) {
-  if (bootCache) setStatus("saved copy from " + fmtStamp(bootCache.at));
-  syncFromSheet(false);
-} else {
-  setStatus("plans live in this file — connect a Google Sheet to edit on the go");
-}
 </script>
 </body>
 </html>
