@@ -386,101 +386,93 @@
 
    Each day:   { date:"YYYY-MM-DD", city, kana, via?, theme?, notes?, items:[…] }
    Each item:  { time?, title, note?, map? }              ← a simple entry
-               { time?, title, note?, options:[…] }       ← an expandable entry
+               { time?, title, note?, options:[…], hint? } ← an expandable entry
 
    • map   — a place name (opens Google Maps / the map app on phones)
              or a full https:// maps link if you have one.
-   • options — turns the entry into a tap-to-expand list of choices.
+   • options — turns the entry into a tap-to-expand list.
      Each option: { label, note?, map?, places:[ { name, note?, map? } ] }
+   • hint  — overrides the little pill next to an expandable title
+             (defaults to "N options"; e.g. set "8 景點" for a spot list).
    ════════════════════════════════════════════════════════════════ */
 const TRIP = {
   title: "Japan 2026",
   days: [
     {
-      date: "2026-10-12", city: "Tokyo", kana: "東京",
-      theme: "Arrival day — land, settle in, first bites",
+      date: "2026-08-20", city: "Kawaguchiko", kana: "河口湖",
+      theme: "抵達日本，包車遊河口湖",
+      notes: "宿泊：Ubuya 河口湖",
       items: [
-        { time: "14:00", title: "Land at Haneda", note: "grab a Suica / Welcome Suica at the airport", map: "Haneda Airport Tokyo" },
-        { time: "16:00", title: "Check in — Shinjuku", note: "", map: "Shinjuku Station" },
+        { time: "07:20", title: "起飛 BR192 · TSA T1", note: "台北松山機場 第一航廈", map: "Taipei Songshan Airport" },
+        { time: "11:30", title: "降落 BR192 · HND T3", note: "羽田機場 第三航廈", map: "Haneda Airport Terminal 3" },
+        { time: "12:30", title: "包車開始", note: "包車時間至 22:30 結束" },
         {
-          time: "19:00", title: "Dinner", note: "pick one — both are a short walk from the hotel",
+          time: "13:00", title: "景點 · 包車周遊", hint: "8 景點",
           options: [
-            {
-              label: "Yakitori alleys",
-              note: "tiny smoky counters, cash helps",
-              places: [
-                { name: "Omoide Yokocho", note: "the classic lantern-lit alley", map: "Omoide Yokocho Shinjuku" },
-                { name: "Torikizoku Kabukicho", note: "cheap, cheerful, always open", map: "Torikizoku Kabukicho" },
-              ],
-            },
-            {
-              label: "Ramen",
-              note: "if the flight left everyone tired",
-              places: [
-                { name: "Fuunji", note: "famous tsukemen, expect a line", map: "Fuunji ramen Shinjuku" },
-              ],
-            },
+            { label: "新仓山浅间公园", map: "新倉山浅間公園" },
+            { label: "新仓山浅间神社", map: "新倉富士浅間神社" },
+            { label: "天鹅湖", map: "河口湖 天鵝湖" },
+            { label: "大石公园", map: "大石公園 河口湖" },
+            { label: "忍野八海古村落", map: "忍野八海" },
+            { label: "里根场古村落", note: "西湖いやしの里根場", map: "西湖いやしの里根場" },
+            { label: "天梯小镇", map: "河口湖 天上山公園 カチカチ山" },
+            { label: "罗森便利店", note: "富士山背景的 Lawson", map: "Lawson 河口湖駅前" },
+          ],
+        },
+        { time: "19:00", title: "Ubuya 飯店晚餐", note: "A5 黑毛和牛涮涮鍋", map: "Ubuya 河口湖" },
+      ],
+    },
+    {
+      date: "2026-08-21", city: "Tokyo", kana: "東京", via: "包車",
+      theme: "河口湖 → 東京，池袋",
+      notes: "宿泊：五反田花園酒店",
+      items: [
+        { time: "09:00", title: "早餐 · Ubuya 飯店", note: "預計" },
+        { time: "12:30", title: "包車開始", note: "預計" },
+        { time: "15:00", title: "Check in · 五反田花園酒店", map: "五反田 ガーデンホテル 東京" },
+        { time: "17:00", title: "池袋", note: "景點", map: "Ikebukuro Tokyo" },
+        { time: "19:00", title: "晚餐 · 池袋", map: "Ikebukuro Tokyo" },
+      ],
+    },
+    {
+      date: "2026-08-22", city: "Tokyo", kana: "東京",
+      theme: "表参道、原宿",
+      items: [
+        { time: "10:00", title: "早午餐 · bills", note: "東急プラザ 表参道原宿 7F", map: "bills 表参道" },
+        { time: "13:00", title: "表参道", note: "景點", map: "Omotesando Tokyo" },
+        {
+          time: "19:00", title: "晚餐 · 三選一", hint: "3 選擇",
+          options: [
+            { label: "梅丘寿司の美登利 銀座店", note: "壽司", map: "梅丘寿司の美登利 銀座" },
+            { label: "sushi zamai", note: "壽司", map: "sushi zanmai 銀座" },
+            { label: "てんぷら銀座天亭", note: "天婦羅", map: "銀座天亭 天ぷら" },
           ],
         },
       ],
     },
     {
-      date: "2026-10-13", city: "Tokyo", kana: "東京",
-      theme: "East side classics",
+      date: "2026-08-23", city: "Tokyo", kana: "東京",
+      theme: "銀座",
       items: [
-        { time: "08:00", title: "Tsukiji Outer Market breakfast", note: "", map: "Tsukiji Outer Market" },
-        { time: "10:30", title: "teamLab Planets", note: "book tickets ahead", map: "teamLab Planets Toyosu" },
-        { time: "15:00", title: "Shibuya — crossing, Miyashita Park", note: "", map: "Shibuya Crossing" },
-      ],
-    },
-    {
-      date: "2026-10-14", city: "Tokyo", kana: "東京",
-      theme: "Open day",
-      items: [],
-      notes: "Ideas: Akihabara, day trip to Kamakura, or Ghibli Museum (book a month ahead)",
-    },
-    {
-      date: "2026-10-15", city: "Hakone", kana: "箱根", via: "Romancecar",
-      theme: "Mountains, ropeway, onsen night",
-      items: [
-        { time: "09:00", title: "Romancecar from Shinjuku", note: "reserve a front-window seat", map: "Odakyu Romancecar Shinjuku" },
-        { time: "13:00", title: "Hakone loop", note: "ropeway → Owakudani → pirate ship on Lake Ashi", map: "Owakudani Hakone" },
-        { time: "16:00", title: "Ryokan check-in + onsen", note: "" },
-      ],
-      notes: "Hakone Free Pass covers the whole loop",
-    },
-    {
-      date: "2026-10-16", city: "Kyoto", kana: "京都", via: "Shinkansen",
-      theme: "Shrines and old lanes",
-      items: [
-        { time: "09:30", title: "Shinkansen to Kyoto", note: "Mt. Fuji side: seat E on the right" },
-        { time: "13:00", title: "Fushimi Inari", note: "the higher you climb, the quieter it gets", map: "Fushimi Inari Taisha" },
-        { time: "18:00", title: "Dinner on Pontocho Alley", note: "", map: "Pontocho Alley Kyoto" },
-      ],
-    },
-    {
-      date: "2026-10-17", city: "Kyoto", kana: "京都",
-      theme: "West side — bamboo and gold",
-      items: [
-        { time: "08:00", title: "Arashiyama bamboo grove", note: "go early, before the crowds", map: "Arashiyama Bamboo Grove" },
-        { time: "11:00", title: "Kinkaku-ji (Golden Pavilion)", note: "", map: "Kinkaku-ji" },
-        { time: "15:00", title: "Gion walk + tea", note: "", map: "Gion Kyoto" },
-      ],
-    },
-    {
-      date: "2026-10-18", city: "Osaka", kana: "大阪", via: "JR Special Rapid",
-      theme: "Food city finale",
-      items: [
-        { time: "10:00", title: "Train to Osaka", note: "~30 min" },
-        { time: "12:00", title: "Osaka Castle", note: "", map: "Osaka Castle" },
+        { time: "11:30", title: "午餐 · 六歌仙", note: "西新宿 110ビル 10F", map: "六歌仙 新宿" },
+        { time: "14:00", title: "銀座", note: "景點", map: "Ginza Tokyo" },
         {
-          time: "18:00", title: "Dotonbori food crawl", note: "graze across a few — one bite each",
+          time: "19:00", title: "晚餐 · 四選一", hint: "4 選擇",
           options: [
-            { label: "Takoyaki", note: "octopus balls, the Osaka staple", map: "Takoyaki Doraku Wanaka Dotonbori" },
-            { label: "Kushikatsu", note: "deep-fried skewers — no double-dipping", map: "Kushikatsu Daruma Dotonbori" },
-            { label: "Okonomiyaki", note: "savory griddle pancake", map: "Mizuno Okonomiyaki Dotonbori" },
+            { label: "梅丘寿司の美登利 銀座店", note: "壽司", map: "梅丘寿司の美登利 銀座" },
+            { label: "sushi zamai", note: "壽司", map: "sushi zanmai 銀座" },
+            { label: "てんぷら銀座天亭", note: "天婦羅", map: "銀座天亭 天ぷら" },
+            { label: "權八 西麻布", note: "居酒屋", map: "権八 西麻布" },
           ],
         },
+      ],
+    },
+    {
+      date: "2026-08-24", city: "Tokyo", kana: "東京",
+      theme: "賦歸",
+      items: [
+        { time: "12:40", title: "起飛 BR191 · HND T3", note: "羽田機場 第三航廈", map: "Haneda Airport Terminal 3" },
+        { time: "15:05", title: "降落 BR191 · TSA T1", note: "台北松山機場 第一航廈", map: "Taipei Songshan Airport" },
       ],
     },
   ],
@@ -560,11 +552,12 @@ function optHtml(o) {
 function itemHtml(it) {
   if (it.options && it.options.length) {
     const n = it.options.length;
+    const hint = it.hint || (n + " option" + (n === 1 ? "" : "s"));
     return `<li class="has-exp">
       <span class="plan-time">${esc(it.time || "–")}</span>
       <details class="exp">
         <summary>
-          <div class="plan-what">${esc(it.title)}<span class="exp-hint">${n} option${n === 1 ? "" : "s"}</span></div>
+          <div class="plan-what">${esc(it.title)}<span class="exp-hint">${esc(hint)}</span></div>
           ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
         </summary>
         <div class="exp-body">${it.options.map(optHtml).join("")}</div>
