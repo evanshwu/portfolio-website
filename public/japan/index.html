@@ -220,6 +220,7 @@
   }
   .plan-body { min-width: 0; flex: 1; }
   .plan-what { font-size: 17px; font-weight: 600; }
+  .cat { margin-right: 6px; font-style: normal; }
   .plan-note { font-size: 15px; color: var(--muted); margin-top: 1px; }
 
   /* map link — opens the Maps app on phones */
@@ -394,6 +395,8 @@
      Each option: { label, note?, map?, places:[ { name, note?, map? } ] }
    • hint  — overrides the little pill next to an expandable title
              (defaults to "N options"; e.g. set "8 景點" for a spot list).
+   • cat   — a category tag → shows an emoji before the title:
+             fly ✈️ · car 🚗 · hotel 🏨 · eat 🍽️ · see 🏯
    ════════════════════════════════════════════════════════════════ */
 const TRIP = {
   title: "Japan 2026",
@@ -403,11 +406,11 @@ const TRIP = {
       theme: "抵達日本，包車遊河口湖",
       notes: "宿泊：Ubuya 河口湖",
       items: [
-        { time: "07:20", title: "起飛 BR192 · TSA T1", note: "台北松山機場 第一航廈", map: "Taipei Songshan Airport" },
-        { time: "11:30", title: "降落 BR192 · HND T3", note: "羽田機場 第三航廈", map: "Haneda Airport Terminal 3" },
-        { time: "12:30", title: "包車開始", note: "包車時間至 22:30 結束" },
+        { cat: "fly", time: "07:20", title: "起飛 BR192 · TSA T1", note: "台北松山機場 第一航廈", map: "Taipei Songshan Airport" },
+        { cat: "fly", time: "11:30", title: "降落 BR192 · HND T3", note: "羽田機場 第三航廈", map: "Haneda Airport Terminal 3" },
+        { cat: "car", time: "12:30", title: "包車開始", note: "包車時間至 22:30 結束" },
         {
-          time: "13:00", title: "景點 · 包車周遊", hint: "8 景點",
+          cat: "see", time: "13:00", title: "景點 · 包車周遊", hint: "8 景點",
           options: [
             { label: "新仓山浅间公园", map: "新倉山浅間公園" },
             { label: "新仓山浅间神社", map: "新倉富士浅間神社" },
@@ -419,7 +422,7 @@ const TRIP = {
             { label: "罗森便利店", note: "富士山背景的 Lawson", map: "Lawson 河口湖駅前" },
           ],
         },
-        { time: "19:00", title: "Ubuya 飯店晚餐", note: "A5 黑毛和牛涮涮鍋", map: "Ubuya 河口湖" },
+        { cat: "eat", time: "19:00", title: "Ubuya 飯店晚餐", note: "A5 黑毛和牛涮涮鍋", map: "Ubuya 河口湖" },
       ],
     },
     {
@@ -427,21 +430,21 @@ const TRIP = {
       theme: "河口湖 → 東京，池袋",
       notes: "宿泊：五反田花園酒店",
       items: [
-        { time: "09:00", title: "早餐 · Ubuya 飯店", note: "預計" },
-        { time: "12:30", title: "包車開始", note: "預計" },
-        { time: "15:00", title: "Check in · 五反田花園酒店", map: "五反田 ガーデンホテル 東京" },
-        { time: "17:00", title: "池袋", note: "景點", map: "Ikebukuro Tokyo" },
-        { time: "19:00", title: "晚餐 · 池袋", map: "Ikebukuro Tokyo" },
+        { cat: "eat", time: "09:00", title: "早餐 · Ubuya 飯店", note: "預計" },
+        { cat: "car", time: "12:30", title: "包車開始", note: "預計" },
+        { cat: "hotel", time: "15:00", title: "Check in · 五反田花園酒店", map: "三井ガーデンホテル五反田" },
+        { cat: "see", time: "17:00", title: "池袋", map: "Ikebukuro Tokyo" },
+        { cat: "eat", time: "19:00", title: "晚餐 · 池袋", map: "Ikebukuro Tokyo" },
       ],
     },
     {
       date: "2026-08-22", city: "Tokyo", kana: "東京",
       theme: "表参道、原宿",
       items: [
-        { time: "10:00", title: "早午餐 · bills", note: "東急プラザ 表参道原宿 7F", map: "bills 表参道" },
-        { time: "13:00", title: "表参道", note: "景點", map: "Omotesando Tokyo" },
+        { cat: "eat", time: "10:00", title: "早午餐 · bills", note: "東急プラザ 表参道原宿 7F", map: "bills 表参道" },
+        { cat: "see", time: "13:00", title: "表参道", map: "Omotesando Tokyo" },
         {
-          time: "19:00", title: "晚餐 · 三選一", hint: "3 選擇",
+          cat: "eat", time: "19:00", title: "晚餐 · 三選一", hint: "3 選擇",
           options: [
             { label: "梅丘寿司の美登利 銀座店", note: "壽司", map: "梅丘寿司の美登利 銀座" },
             { label: "sushi zamai", note: "壽司", map: "sushi zanmai 銀座" },
@@ -454,10 +457,10 @@ const TRIP = {
       date: "2026-08-23", city: "Tokyo", kana: "東京",
       theme: "銀座",
       items: [
-        { time: "11:30", title: "午餐 · 六歌仙", note: "西新宿 110ビル 10F", map: "六歌仙 新宿" },
-        { time: "14:00", title: "銀座", note: "景點", map: "Ginza Tokyo" },
+        { cat: "eat", time: "11:30", title: "午餐 · 六歌仙", note: "西新宿 110ビル 10F", map: "六歌仙 新宿" },
+        { cat: "see", time: "14:00", title: "銀座", map: "Ginza Tokyo" },
         {
-          time: "19:00", title: "晚餐 · 四選一", hint: "4 選擇",
+          cat: "eat", time: "19:00", title: "晚餐 · 四選一", hint: "4 選擇",
           options: [
             { label: "梅丘寿司の美登利 銀座店", note: "壽司", map: "梅丘寿司の美登利 銀座" },
             { label: "sushi zamai", note: "壽司", map: "sushi zanmai 銀座" },
@@ -471,8 +474,8 @@ const TRIP = {
       date: "2026-08-24", city: "Tokyo", kana: "東京",
       theme: "賦歸",
       items: [
-        { time: "12:40", title: "起飛 BR191 · HND T3", note: "羽田機場 第三航廈", map: "Haneda Airport Terminal 3" },
-        { time: "15:05", title: "降落 BR191 · TSA T1", note: "台北松山機場 第一航廈", map: "Taipei Songshan Airport" },
+        { cat: "fly", time: "12:40", title: "起飛 BR191 · HND T3", note: "羽田機場 第三航廈", map: "Haneda Airport Terminal 3" },
+        { cat: "fly", time: "15:05", title: "降落 BR191 · TSA T1", note: "台北松山機場 第一航廈", map: "Taipei Songshan Airport" },
       ],
     },
   ],
@@ -535,6 +538,12 @@ function mapLink(q, label) {
     `<span class="pin" aria-hidden="true">📍</span>${esc(label || "Map")}</a>`;
 }
 
+/* category icons — a quick visual tag for each kind of stop */
+const CAT = { fly: "✈️", car: "🚗", hotel: "🏨", eat: "🍽️", see: "🏯" };
+function catIcon(c) {
+  return c && CAT[c] ? `<span class="cat" aria-hidden="true">${CAT[c]}</span>` : "";
+}
+
 function placeHtml(p) {
   return `<li>
     <div class="place-row"><span class="place-name">${esc(p.name)}</span>${p.map ? mapLink(p.map) : ""}</div>
@@ -557,7 +566,7 @@ function itemHtml(it) {
       <span class="plan-time">${esc(it.time || "–")}</span>
       <details class="exp">
         <summary>
-          <div class="plan-what">${esc(it.title)}<span class="exp-hint">${esc(hint)}</span></div>
+          <div class="plan-what">${catIcon(it.cat)}${esc(it.title)}<span class="exp-hint">${esc(hint)}</span></div>
           ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
         </summary>
         <div class="exp-body">${it.options.map(optHtml).join("")}</div>
@@ -567,7 +576,7 @@ function itemHtml(it) {
   return `<li>
     <span class="plan-time">${esc(it.time || "–")}</span>
     <div class="plan-body">
-      <div class="plan-what">${esc(it.title)}${it.map ? mapLink(it.map) : ""}</div>
+      <div class="plan-what">${catIcon(it.cat)}${esc(it.title)}${it.map ? mapLink(it.map) : ""}</div>
       ${it.note ? `<div class="plan-note">${esc(it.note)}</div>` : ""}
     </div>
   </li>`;
